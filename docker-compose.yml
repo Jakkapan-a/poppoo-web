@@ -1,6 +1,11 @@
+
+networks:
+  postgres_net:
+    driver: bridge
+
 services:
   postgres:
-    container_name: postgres_container
+    container_name: postgres_snake
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -10,7 +15,22 @@ services:
     volumes:
       - ./postgres:/data/postgres
     ports:
-      - "6432:5432"
+      - "6435:5432"
     networks:
       - postgres_net
-    restart: unless-stopped
+    restart: always
+
+  # server:
+  #   container_name: bun
+  #   image: oven/bun:latest
+  #   volumes:
+  #     - ./server:/app
+  #   ports:
+  #     - "3001:3000"
+  #   networks:
+  #     - postgres_net
+  #   depends_on:
+  #     - postgres
+  #   working_dir: /app
+  #   restart: always
+  #   command: bun run dev

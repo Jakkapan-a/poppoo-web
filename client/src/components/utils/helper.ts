@@ -15,12 +15,20 @@ export const removeLocalStorage = (key:any) => {
     localStorage.removeItem(key);
 }
 
-export const clearLocalStorage = () => {
-    localStorage.clear();
-}
-
 export const isUserLoggedIn = ():boolean => {
     const token:string|null = localStorage.getItem('app_token');
-    console.log(token,"token", !!token);
     return !!token;
+}
+
+export const setAccessToken = (token:string) => {
+    localStorage.setItem('app_token', token);
+}
+export const getAccessToken = () => {
+    return localStorage.getItem('app_token');
+}
+
+export const logout = (next:any) => {
+    localStorage.removeItem('app_token');
+    localStorage.removeItem('user');
+    next();
 }
