@@ -10,12 +10,6 @@ const prisma = new PrismaClient();
 dotenv.config({path: __dirname + '/.env'});
 const SECRET = process.env.SECRET || 'secret';
 
-export const join = async (req:any, res:any) => {
-    const {username, socketId} = req.body;
-    console.log('username', username);
-
-};
-
 export const singIn =async (req:any, res:any)=> {
     const {username, password} = req.body;
     const user = await prisma.user.findUnique({
@@ -24,8 +18,6 @@ export const singIn =async (req:any, res:any)=> {
         }
     });
     if (!user) {
-
-
         return res.status(404).json({message: 'ไม่พบผู้ใช้งาน'});
     }
     let isPasswordValid = await bcrypt.compare(password, user.password);
@@ -47,13 +39,22 @@ export const singIn =async (req:any, res:any)=> {
             userId: user.id
         }
     });
+
+    await prisma.user.update({
+        where: {
+            id: user.id
+        },
+        data: {
+            status: 'online'
+        }
+    });
+
     return res.json({token: _token, user: {
         id: user.id,
         username: user.username
         }
     });
 }
-
 export const register = async (req:any, res:any) => {
     let {username, password, confirmPassword} = req.body;
     if (password !== confirmPassword) {
@@ -93,7 +94,6 @@ export const register = async (req:any, res:any) => {
 
 export const checkUsername = async (req:any, res:any) => {
     const {username} = req.params;
-    console.log('username', username);
     const user = await prisma.user.findUnique({
         where: {
             username: username
@@ -107,8 +107,28 @@ export const checkUsername = async (req:any, res:any) => {
 
 export const hasSignedIn = async (req:any, res:any) => {
     const {username} = req.params;
-    const user = await prisma.user.findUnique({
-        include: {
+    // console.log(username);
+    const user = await prisma.user.findFirst({
+        include:{
+            tokens: true
+        },
+        where: {
+            username: username
+        }
+    });
+    if (!user) {
+        return res.status(404).json({message: 'User not found'});
+    }
+    if(user.tokens.length === 0){
+        return res.status(401).json({message: 'Unauthorized'});
+    }
+    return res.json({message: 'Authorized'});
+}
+
+export const singOut = async (req:any, res:any) => {
+    const {username} = req.body;
+    const user = await prisma.user.findFirst({
+        include:{
             tokens: true
         },
         where: {
@@ -119,10 +139,20 @@ export const hasSignedIn = async (req:any, res:any) => {
     if (!user) {
         return res.status(404).json({message: 'User not found'});
     }
-
+    const data ={
+        username: username,
+        status: 'offline',
+        id: user.id
+    }
     if(user.tokens.length === 0){
         return res.status(401).json({message: 'Unauthorized'});
     }
 
-    return res.json({message: 'Authorized'});
+    await prisma.token.deleteMany({
+        where: {
+            userId: user.id
+        }
+    });
+
+    return res.json({message: 'Sign out success'});
 }

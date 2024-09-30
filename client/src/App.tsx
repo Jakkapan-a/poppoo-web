@@ -1,5 +1,5 @@
 import './App.css'
-import {Route, Routes} from 'react-router-dom'
+import {Route, Routes, useNavigate} from 'react-router-dom'
 // import { useState } from 'react'
 import Rooms from './components/Rooms.tsx'
 import Home from './components/Home'
@@ -12,8 +12,11 @@ import SignIn from "./components/auth/SignIn.tsx";
 import Signup from "./components/auth/Signup.tsx";
 import {getAccessToken} from "./components/utils/helper.ts";
 import Play from "./components/Play.tsx";
+import {useAuth} from "./context/AuthContext.tsx";
 
 const App = () => {
+    const {logout} = useAuth();
+    const navigate = useNavigate();
     const [socketId, setSocketId] = useState('');
     socket.on('connect', () => {
         const _socketId = socket.id || '';
@@ -23,6 +26,22 @@ const App = () => {
 
         socket.emit('identify', {socketId: _socketId, token});
     });
+    socket.on('sign-out-broadcast', (data) => {
+        try {
+            const user = data;
+            const localUser =localStorage.getItem('user');
+            if(localUser !== null){
+                const localUserObj = JSON.parse(localUser);
+                if(localUserObj.id === user.id){
+                    logout();
+                    navigate('/');
+                }
+            }
+        }catch (e) {
+            console.error(e);
+        }
+    });
+
     useEffect(() => {
         return () => {
         };

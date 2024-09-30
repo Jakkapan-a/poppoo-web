@@ -1,13 +1,19 @@
 import {io, Socket} from 'socket.io-client';
 
-const URL = 'http://localhost:3000';
-
-const socket: Socket = io(URL,{
-    autoConnect: true,
+export const SERVER_URL = 'http://localhost:3000';
+const socket: Socket = io(SERVER_URL,{
+    autoConnect: false,
 });
 
 socket.onAny((event, ...args) => {
     console.log(event, args);
 });
+
+interface TopScore {
+    username: string,
+    score: number,
+    status:string,
+    updatedAt: string
+}
 
 export default socket;

@@ -1,5 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getAccessToken, setAccessToken} from "../components/utils/helper.ts";
+import socket, {SERVER_URL} from "../socket.ts";
+import {useNavigate} from "react-router-dom";
 
 
 interface UserContext
@@ -12,44 +14,86 @@ interface AuthContextType {
     login: (token: string, user:UserContext) => void;
     logout: () => void;
     serverUrl: string;
+    topScore: TopScore[];
+    currentScore: number;
+    setTopScore: (data:TopScore[]) => void;
 }
 
+export interface TopScore {
+    rank: number,
+    no: number,
+    username: string,
+    score: number,
+    status:string,
+    updatedAt: string
+}
+
+
+interface updateScore {
+    id: number,
+    score: number,
+}
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuth, setIsAuth] = useState(false);
-    const serverUrl = 'http://localhost:3000';
+    const serverUrl = SERVER_URL;
+    const [topScore,setTopScore] = useState([] as TopScore[]);
+    const [currentScore,setCurrentScore] = useState(0);
 
     const login = (token: string, user:UserContext) => {
         setAccessToken(token);
         localStorage.setItem('user', JSON.stringify(user));
         setIsAuth(true);
-        // console.log('login with token:', token);
     };
-
     const logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('app_token');
+        localStorage.removeItem('user');
         setIsAuth(false);
+        window.location.href = '/';
     };
 
     useEffect(() => {
         init();
+        socket.connect();
+        socket.on('connect', () => {
+            const _socketId = socket.id || '';
+            const token = getAccessToken() || '';
+            socket.emit('identify', {socketId: _socketId, token});
+        });
+        const handleTopScore = (data: TopScore[]) => {
+            setTopScore(data.map((item, index) => ({
+                ...item,
+                no: index + 1
+            })));
+        };
+        socket.on('topScore', handleTopScore);
+        socket.on('updateScore', (data:updateScore) => {
+            setCurrentScore(data.score);
+        });
+
+        return () => {
+            socket.disconnect();
+        }
     }, []);
     useEffect(() => {
         console.log('isAuth', isAuth);
     }, [isAuth]);
+
+    // useEffect(() => {
+    //     console.log('currentScore => ', currentScore);
+    // }, [currentScore]);
     const init = ()=>{
         const token = localStorage.getItem('app_token');
-        console.log('Token', token);
-
         if (token) {
             setIsAuth(true);
+        }else{
+            setIsAuth(false);
         }
-        console.log('isAuth', isAuth);
     }
 
     return (
-        <AuthContext.Provider value={{ isAuth, serverUrl: serverUrl, login, logout }}>
+        <AuthContext.Provider value={{ isAuth, serverUrl,topScore, currentScore,setTopScore, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

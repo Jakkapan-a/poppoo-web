@@ -3,10 +3,6 @@ export const isValidEmail = (email:any) => {
     return isValidateEmail.test(email);
 }
 
-export const getLocalStorage = (key:any) => {
-    return localStorage.getItem(key);
-}
-
 export const setLocalStorage = (key:any, value:any) => {
     localStorage.setItem(key, value);
 }
@@ -15,10 +11,7 @@ export const removeLocalStorage = (key:any) => {
     localStorage.removeItem(key);
 }
 
-export const isUserLoggedIn = ():boolean => {
-    const token:string|null = localStorage.getItem('app_token');
-    return !!token;
-}
+
 
 export const setAccessToken = (token:string) => {
     localStorage.setItem('app_token', token);

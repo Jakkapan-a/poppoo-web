@@ -1,17 +1,25 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useAuth} from "../../context/AuthContext.tsx";
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
+import socket from "../../socket.ts";
 
 export default function Navbar() {
     const {isAuth, login, logout} = useAuth();
+    const navigate = useNavigate();
     const handleLogout = () => {
+        const localUser =localStorage.getItem('user');
+        socket.emit('sign-out-btn', localUser);
         logout();
     };
 
-    const handleLogin = () => {
-        // login('token');
-    };
+    useEffect(() => {
+
+    }, []);
+    useEffect(() => {
+
+    }, [isAuth]);
+
     const showAuthMenu = () => {
         if (isAuth) {
             return (
@@ -31,7 +39,7 @@ export default function Navbar() {
 
             <nav className="navbar navbar-expand-lg navbar-light navbar-dark bg-primary">
                 <div className="container">
-                    <NavLink to="/" className="navbar-brand">Moo deng</NavLink>
+                    <NavLink to="/" className="navbar-brand">PopPoo</NavLink>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                             aria-label="Toggle navigation">

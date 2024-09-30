@@ -1,11 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {isUserLoggedIn, setAccessToken} from "../utils/helper.ts";
+import {setAccessToken} from "../utils/helper.ts";
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import getUrls from "../utils/config.ts";
 import {useAuth} from "../../context/AuthContext.tsx";
 import Swal from "sweetalert2";
+import socket from "../../socket.ts";
 
 interface UserState {
     username: string;
@@ -21,14 +22,12 @@ export default function SignIn() {
         password: ''
     });
     useEffect(() => {
-
-
-    }, []);
-    useEffect(() => {
-        if (isAuth) {
+        const token = localStorage.getItem('app_token');
+        if (token) {
             navigate('/');
         }
-    }, [isAuth]);
+
+    }, []);
     const handleInputChange = (name: string) => (e: any) => {
         setUserState({
             ...userState,
@@ -49,16 +48,36 @@ export default function SignIn() {
         }
 
         try {
+            const hasSignIn = await fetchHasSingIn();
+            if(hasSignIn){
+                const button = await Swal.fire({
+                    title: 'คุณได้เข้าสู่ระบบอยู่แล้ว',
+                    text: 'คุณต้องการออกจากระบบหรือไม่?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: `ออกจากระบบ`,
+                    cancelButtonText: `ยกเลิก`
+                });
+                if (button.isConfirmed) {
+                    const signOut = await fetchSignOut();
+                }else{
+                    return;
+                }
+            }
             const data = await fetchSignIn(body);
             const {token, user} = data;
             if (token !== undefined) {
-                login(token,user);
+                login(token, user);
                 await Swal.fire({
                     icon: 'success',
                     title: 'เข้าสู่ระบบสำเร็จ',
                     timer: 1500
                 });
-                navigate('/', {replace: true, state: {from: '/signin'}});
+                setTimeout(() => {
+                    socket.emit('signed-in', {username: userState.username});
+                    navigate('/', {replace: true, state: {from: '/signin'}});
+                }, 400);
+
             }
 
         } catch (e: any) {
@@ -87,6 +106,23 @@ export default function SignIn() {
             throw new Error(message);
         }
         return data;
+    };
+
+    const fetchHasSingIn = async () => {
+        const url = `${serverUrl}/api/auth/has-sign-in/${userState.username}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        console.log('data', response.status);
+        return response.status === 200;
+    };
+
+    const fetchSignOut = async () => {
+       socket.emit('sign-out', {username: userState.username});
     };
 
     useEffect(() => {
