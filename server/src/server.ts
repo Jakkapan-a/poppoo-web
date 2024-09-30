@@ -34,8 +34,9 @@ io.on('connection', async (socket) => {
             userId,
             score: currentScore
         }
+        console.log('Add score socketId:', socketId);
+        await broadcastScore(socket, socketId);
         socket.emit('updateScore', score_);
-        await broadcastScore(socket);
     });
     socket.on('identify', async (data) => {
         const {token} = data;

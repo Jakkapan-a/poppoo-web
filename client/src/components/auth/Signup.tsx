@@ -1,5 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useAuth} from "../../context/AuthContext.tsx";
 
 export default function Signup() {
@@ -112,9 +112,26 @@ export default function Signup() {
         return await response.json();
     }
 
+    useEffect(() => {
+        const signIn = document.querySelector('.sign-in');
+        signIn?.classList.add('d-none');
+        return () => {
+            signIn?.classList.remove('d-none');
+        }
+    }, []);
+
     return (
         <>
-            <section className="py-3 py-md-5 py-xl-8 d-flex justify-content-center align-items-center mt-5">
+            <div className="container d-flex justify-content-between align-items-center mt-2">
+                <div>
+
+                </div>
+                <div>
+                    <Link to='/' className="btn btn-primary">
+                        <i className="bi bi-house-door-fill"/> กลับหน้าหลัก</Link>
+                </div>
+            </div>
+            <section className="py-3 py-md-5 py-xl-8 d-flex justify-content-center align-items-center">
                 <div className="container">
                     <div className="row justify-content-center align-items-center">
                         <div className="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -128,11 +145,12 @@ export default function Signup() {
                                         <div className="form-group mb-2 ">
                                             <label htmlFor="validationUsername"
                                                    className="form-label">ชื่อผู้ใช้</label>
-                                            <input type="text" className={`form-control ${isValidUsernameClass}`} id="validationUsername"
-                                                   placeholder="ชื่อผู้ใช้" onChange={handleInputChange('username')} />
-                                                <div className="valid-feedback">
-                                                    {validUsername}
-                                                </div>
+                                            <input type="text" className={`form-control ${isValidUsernameClass}`}
+                                                   id="validationUsername"
+                                                   placeholder="ชื่อผู้ใช้" onChange={handleInputChange('username')}/>
+                                            <div className="valid-feedback">
+                                                {validUsername}
+                                            </div>
 
 
                                         </div>
@@ -140,16 +158,20 @@ export default function Signup() {
                                             <label htmlFor="validationPassword"
                                                    className="form-label">รหัสผ่าน</label>
                                             <input type="password" className={`form-control ${isValidPasswordClass}`}
-                                                   id="validationPassword" placeholder="รหัสผ่าน" onChange={handleInputChange('password')} autoComplete="new-password"/>
+                                                   id="validationPassword" placeholder="รหัสผ่าน"
+                                                   onChange={handleInputChange('password')}
+                                                   autoComplete="new-password"/>
                                             <div className="valid-feedback">
                                                 {validPassword}
                                             </div>
                                         </div>
                                         <div className="form-group mb-2">
-                                        <label htmlFor="validationConfirmPassword"
+                                            <label htmlFor="validationConfirmPassword"
                                                    className="form-label">ยืนยันรหัสผ่าน</label>
                                             <input type="password" className={`form-control ${isValidPasswordClass}`}
-                                                   id="validationConfirmPassword" placeholder="ยืนยันรหัสผ่าน" onChange={handleInputChange('confirmPassword')} autoComplete="new-password"/>
+                                                   id="validationConfirmPassword" placeholder="ยืนยันรหัสผ่าน"
+                                                   onChange={handleInputChange('confirmPassword')}
+                                                   autoComplete="new-password"/>
                                             <div className="valid-feedback">
                                                 {validPassword}
                                             </div>

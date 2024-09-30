@@ -76,9 +76,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             socket.disconnect();
         }
     }, []);
-    useEffect(() => {
-        console.log('isAuth', isAuth);
-    }, [isAuth]);
+    // useEffect(() => {
+    //     console.log('isAuth', isAuth);
+    // }, [isAuth]);
 
     // useEffect(() => {
     //     console.log('currentScore => ', currentScore);

@@ -37,6 +37,12 @@ export default function Home() {
             }
         };
         fetchData();
+
+        const user = localStorage.getItem('user');
+        if(user !== null){
+            const userObj = JSON.parse(user);
+            setName(userObj.username);
+        }
     }, []);
 
     socket.on('topScoresA', (data) => {
@@ -101,11 +107,11 @@ export default function Home() {
 
     return (
         <>
-            <div className="container d-flex justify-content-center align-items-center pt-5">
-                <div className="card text-center w-100">
+            <div className="container d-flex justify-content-center align-items-center mt-4">
+                <div className="card text-center w-100 p-3">
                     <div className="card-body text-center m-0">
-                        <h5 className="card-title">Sake Game</h5>
-                        <p className="card-text">ยินดีต้อนรับเข้าสู่เกมส์ Sake Game</p>
+                        <h5 className="card-title">POP POO</h5>
+                        <p className="card-text">ยินดีต้อนรับ {name}</p>
                         {
                             isAuth ? (
                                 <Link to="/play" className={"btn btn-warning"}>เริ่มเกมส์</Link>

@@ -74,7 +74,8 @@ export const register = async (req:any, res:any) => {
     user = await prisma.user.create({
         data: {
             username: username,
-            password: hash
+            password: hash,
+            status: 'online'
         }
     });
     const token = jwt.sign({id: user.id}, SECRET);
@@ -86,7 +87,7 @@ export const register = async (req:any, res:any) => {
     await prisma.token.create({
         data: {
             token: token,
-            userId: user.id
+            userId: user.id,
         }
     });
     return res.json({token: token, user: user});

@@ -138,9 +138,9 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
                 }
             }
         }
-
         // ส่งข้อมูล topScore ไปยัง client
         socket.broadcast.emit('topScore', topScore);
+        socket.emit('topScore', topScore);
         return topScore;
     } catch (e: any) {
         console.error(e.message);

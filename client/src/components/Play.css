@@ -1,0 +1,49 @@
+body{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+
+}
+.poppoo{
+    height: 80vh;
+    position: relative;
+}
+.poppoo-container{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-size: auto;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-image: url('/images/moo_dang_m0.png');
+    transition: background-image 0.4s;
+    cursor: pointer;
+    outline: none;
+}
+.poppoo-container.clicked{
+    background-image: url('/images/moo_dang_m1.png');
+}
+
+.popoo-score{
+    position: absolute;
+    top: 90px;
+    right: 0;
+    padding: 1px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    /*font-size: 1.5rem;*/
+    /*border-radius: 0 0 0 1px;*/
+}
+
+.popoo-play-sound{
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    padding: 1px;
+    background-color: rgba(0, 0, 0, 0.0);
+    /*color: white;*/
+    /*font-size: 1.5rem;*/
+    /*border-radius: 0 0 1px 0;*/
+}
