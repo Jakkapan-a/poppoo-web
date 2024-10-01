@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "module": "index.ts",
+  "module": "src/server.ts",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
@@ -8,8 +8,11 @@
   },
   "scripts": {
     "dev": "bun --watch src/server.ts",
-    "start": "bun src/index.js",
-    "build": "bun build src/server.ts"
+    "clean": "rm -rf dist && rm -rf node_modules",
+    "start": "bun  src/server.ts",
+    "build": "rm -rf dist && bun build src/server.ts --outdir ./dist --target node",
+    "prisma": "bunx prisma deploy",
+    "migrate": "bunx prisma migrate dev --name init"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -22,12 +25,15 @@
     "@types/express-list-endpoints": "^6.0.3",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/validator": "^13.12.2",
+    "aws-sdk": "^2.1691.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-list-endpoints": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.5",
     "socket.io": "^4.8.0"
   }
 }

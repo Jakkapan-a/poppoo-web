@@ -1,11 +1,40 @@
 
-networks:
-  postgres_net:
-    driver: bridge
 
 services:
+  web_server:
+    container_name: nginx_web
+    build: 
+      context: ./client/
+      dockerfile: Dockerfile
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      # - ./client/dist:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    networks:
+      - poppoo_network
+    depends_on:
+      - postgres
+      - web_service
+    restart: always
+
+  web_service:
+    container_name: web_service
+    build: 
+      context: ./server/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - poppoo_network
+    depends_on:
+      - postgres
+    working_dir: /usr/src/app
+    restart: always
+    command: bun run start
+
   postgres:
-    container_name: postgres_snake
+    container_name: postgres_poppoo
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -17,20 +46,9 @@ services:
     ports:
       - "6435:5432"
     networks:
-      - postgres_net
+      - poppoo_network
     restart: always
 
-  # server:
-  #   container_name: bun
-  #   image: oven/bun:latest
-  #   volumes:
-  #     - ./server:/app
-  #   ports:
-  #     - "3001:3000"
-  #   networks:
-  #     - postgres_net
-  #   depends_on:
-  #     - postgres
-  #   working_dir: /app
-  #   restart: always
-  #   command: bun run dev
+networks:
+  poppoo_network:
+    driver: bridge

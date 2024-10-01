@@ -249,7 +249,9 @@ app.use(express.urlencoded({extended: true}));
 app.get('/', (req, res) => {
     return res.json({message: 'Server is running'});
 });
-
+app.get('/api', (req, res) => {
+    return res.json({message: 'Server is running'});
+});
 app.use('/api/auth', auth);
 app.get('/api/top-score', async (req:any, res:any) => await popTopScore(req, res));
 app.use('/api/pop',popMiddleware,pop)

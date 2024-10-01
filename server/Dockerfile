@@ -1,10 +1,27 @@
-FROM oven/bun:latest
+FROM oven/bun
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y iputils-ping
 
-COPY . ./
+WORKDIR /usr/src/app
 
+# Copy the package.json, bun.lockb, and other source code files
+COPY package*.json bun.lockb ./
+COPY . .
 
-# RUN bun install
+# Set the environment to production
+ENV NODE_ENV=production
 
-# CMD ["bun", "run", "dev"]
+# Install dependencies using bun
+RUN bun install
+
+# Ensure bunx is available globally
+ENV PATH="/root/.bun/bin:$PATH"
+
+# Generate Prisma Client
+RUN bunx prisma generate
+
+# Expose the port
+EXPOSE 3000
+
+# Run the application
+CMD ["bun", "run", "start"]
