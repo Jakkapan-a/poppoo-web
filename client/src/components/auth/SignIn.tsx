@@ -28,6 +28,8 @@ export default function SignIn() {
         }
 
     }, []);
+
+    
     const handleInputChange = (name: string) => (e: any) => {
         setUserState({
             ...userState,
@@ -117,7 +119,7 @@ export default function SignIn() {
             }
         });
         const data = await response.json();
-        console.log('data', response.status);
+        // console.log('data', response.status);
         return response.status === 200;
     };
 

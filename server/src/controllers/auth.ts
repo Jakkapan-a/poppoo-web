@@ -157,3 +157,42 @@ export const singOut = async (req:any, res:any) => {
 
     return res.json({message: 'Sign out success'});
 }
+
+export const checkUsernameId = async (req:any, res:any) => {
+    const {username,id} = req.body;
+    console.log(username, id);
+
+    // Check if username is available with id
+    const user = await prisma.user.findFirst({
+        where: {
+            username: username,
+            NOT: {
+                id: id
+            }
+        }
+    });
+
+    if (user) {
+        return res.json({message: 'User already exists',status: true});
+    }
+    return res.json({message: 'User not found', status: false});
+};
+
+export const updateUsername = async (req:any, res:any) => {
+    try{
+        const {username, id} = req.body;
+
+        const user = await prisma.user.update({
+            where: {
+                id: id
+            },
+            data: {
+                username: username
+            }
+        });
+    return res.json({message: 'Username updated'});
+
+    }catch (e:any){
+        return res.status(400).json({message: e.message});
+    }
+};

@@ -9,8 +9,6 @@ import {PrismaClient} from '@prisma/client';
 import pop from "./routes/pop.ts";
 import { popMiddleware } from "./middlewares/pop.ts";
 import {addScore, broadcastScore, popTopScore} from "./controllers/pop.ts";
-import router from "./routes/pop.ts";
-import * as tty from "node:tty";
 
 const prisma = new PrismaClient();
 dotenv.config();
@@ -241,17 +239,17 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-
-// Basic route
 app.get('/', (req, res) => {
     return res.json({message: 'Server is running'});
 });
 app.get('/api', (req, res) => {
     return res.json({message: 'Server is running'});
 });
+
 app.use('/api/auth', auth);
 app.get('/api/top-score', async (req:any, res:any) => await popTopScore(req, res));
 app.use('/api/pop',popMiddleware,pop)

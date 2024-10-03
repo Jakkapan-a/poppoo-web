@@ -1,10 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {TopScore, useAuth} from "../context/AuthContext.tsx";
-import socket from "../socket.ts";
+import socket, {SERVER_URL} from "../socket.ts";
 import './Play.css';
 import CSS from "csstype";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import Swal from "sweetalert2";
 // background: rgb(238,208,174);
 // background: radial-gradient(circle, rgba(238,208,174,1) 0%, rgba(233,189,148,1) 100%);
 export default function Play() {
@@ -12,20 +13,22 @@ export default function Play() {
     const [score, setScore] = useState(0);
     const {isAuth, logout, serverUrl, currentScore, topScore} = useAuth();
     const [isSound, setIsSound] = useState(true);
-
+    const [isValidUsernameClass, setIsValidUsernameClass] = useState(''); // is-valid, is-invalid, ''
+    const [validUsername, setValidUsername] = useState(''); // Username is available, Username is not available, ''
     const [user, setUser] = useState({
         id: '',
         name: ''
     });
 
+    const [disabledButton, setDisabledButton] = useState(false);
     useEffect(() => {
         fetchScore()
             .then(r => {
                 if (r !== null) {
-                    // console.log('score', r.score);
+                    console.log('score', r);
                     setScore(r.score);
                 } else {
-                    logout();
+                    // logout();
                     navigate('/');
                 }
             });
@@ -70,7 +73,9 @@ export default function Play() {
 
     const fetchScore = async () => {
         try {
-            const url = serverUrl + '/api/pop/score';
+            const url = SERVER_URL + '/api/pop/score';
+            console.log(url);
+
             const token = localStorage.getItem('app_token');
             const res = await fetch(url, {
                 method: 'GET',
@@ -84,12 +89,13 @@ export default function Play() {
             }
             return null;
         } catch (error) {
-            logout();
+            // logout();
         }
     };
     const [isPressed, setIsPressed] = useState(false);
     const audio = new Audio('/sound/pop3.mp3');
 
+    const [visibleButton, setVisibleButton] = useState('visible');
     useEffect(() => {
         if (isPressed) {
             handleIncrease();
@@ -125,6 +131,13 @@ export default function Play() {
         setIsSound(!isSound);
     };
 
+    const handleInputChange = (name: string) => (e: any) => {
+        setUser({
+            ...user,
+            [name]: e.target.value
+        });
+    };
+
     const popScore = () => {
         try{
         return topScore.map((item: TopScore) => (<>
@@ -137,6 +150,115 @@ export default function Play() {
 
         }catch (e){
             console.log(e);
+        }
+    };
+
+    const model = ()=>{
+        return (<>
+            <div className="modal fade" id="manageUser" aria-hidden="true"
+                 aria-labelledby="manageUserLabel" >
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="manageUserLabel">จัดการผู้ใช้</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="form-group mb-2 ">
+                                        <label htmlFor="validationUsername"
+                                               className="form-label">ชื่อผู้ใช้</label>
+                                        <input type="text" className={`form-control ${isValidUsernameClass}`}
+                                               id="validationUsername"
+                                               placeholder="ชื่อผู้ใช้" onChange={handleInputChange('name')} value={user.name}/>
+                                        <div className="valid-feedback">
+                                            {validUsername}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn btn-primary" data-bs-dismiss="modal" disabled={disabledButton} onClick={handleSaveUser}>บันทึก</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>)
+    };
+
+    useEffect(() => {
+        try {
+            if(user.name){
+                fetchCheckUsername(user.name, user.id).then(
+                    res => {
+                        if(res.status === false) {
+                            // Username is available element is valid
+                            setValidUsername('สามารถใช้ชื่อผู้ใช้นี้ได้');
+                            setIsValidUsernameClass('is-valid');
+                            setDisabledButton(false);
+
+                        }else{
+                            // Username is not available element is invalid
+                            setValidUsername('ชื่อผู้ใช้นี้ถูกใช้แล้ว');
+                            setIsValidUsernameClass('is-invalid');
+                            setDisabledButton(true);
+                        }
+                    });
+            }
+
+        }catch (e){
+            console.log(e);
+        }
+
+    }, [user.name]);
+    const fetchCheckUsername = async (username: string, id: string) => {
+        const url = SERVER_URL + '/api/auth/check-username';
+        const body = {
+            username: username,
+            id: id
+        }
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        return await res.json();
+    };
+
+    const handleSaveUser = async () => {
+        if(user.name === ''){
+            Swal.fire({
+                icon: 'error',
+                title: 'กรุณากรอกชื่อผู้ใช้',
+                timer: 3000
+            });
+            return;
+        }
+        const url = SERVER_URL + '/api/auth/update-username';
+        const body = {
+            username: user.name,
+            id: user.id
+        }
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        console.log(data);
+        if(res.ok){
+            Swal.fire({
+                icon: 'success',
+                title: 'บันทึกสำเร็จ',
+                timer: 3000
+            });
+            localStorage.setItem('user', JSON.stringify({id: user.id, username: user.name}));
         }
     };
     return (
@@ -177,7 +299,13 @@ export default function Play() {
                 </> : <>
                     <i className="bi bi-volume-mute-fill" style={{fontSize: '4rem'}}/>
                 </>}
+
+
             </div>
+            <a className="btn btn-primary" data-bs-toggle="modal" href="#manageUser" role="button">
+                <i className="bi bi-person-fill"/> จัดการผู้ใช้
+            </a>
+            {model()}
         </div>
     );
 }

@@ -37,7 +37,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuth, setIsAuth] = useState(false);
-    const [serverUrl, setServerUrl] = useState(SERVER_URL);
+    const [serverUrl, setServerUrl] = useState("");
     const [topScore,setTopScore] = useState([] as TopScore[]);
     const [currentScore,setCurrentScore] = useState(0);
 
@@ -54,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     useEffect(() => {
+
         init();
         socket.connect();
         socket.on('connect', () => {
@@ -74,9 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
         const host = window.location.host;
-        console.log('host', host);
-        setServerUrl(`http://${host}`);
-
+        setServerUrl(SERVER_URL);
+        console.log('host', serverUrl);
         return () => {
             socket.disconnect();
         }

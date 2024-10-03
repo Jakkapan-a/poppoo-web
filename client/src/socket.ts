@@ -1,7 +1,9 @@
 import {io, Socket} from 'socket.io-client';
 
 const host = window.location.host;
+
 export const SERVER_URL = `http://${host}`;
+// export const SERVER_URL = `http://localhost:3000`;
 const socket: Socket = io(SERVER_URL,{
     autoConnect: false,
 });
