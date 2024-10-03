@@ -24,6 +24,7 @@ let io = new Server(httpServer, {
 
 io.on('connection', async (socket) => {
     const socketId = socket.id;
+    socket.emit('getTopScores', true);
     socket.on('addScore', async (data) => {
         const {userId, score} = data;
         console.log("add score");

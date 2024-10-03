@@ -179,8 +179,14 @@ export default function Play() {
                                 </div>
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary" data-bs-dismiss="modal" disabled={disabledButton} onClick={handleSaveUser}>บันทึก</button>
+                        <div className="modal-footer d-flex justify-content-between">
+                            <div className="d-flex justify-content-between align-items-center mt-3">
+                                <button type="button" className="btn btn-danger sign-out" onClick={handleDeleteAccount}>ลบบัญชี</button>
+                            </div>
+                            <div>
+                                <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal">ปิด</button>
+                                <button className="btn btn-primary" data-bs-dismiss="modal" disabled={disabledButton} onClick={handleSaveUser}>บันทึก</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -259,6 +265,44 @@ export default function Play() {
                 timer: 3000
             });
             localStorage.setItem('user', JSON.stringify({id: user.id, username: user.name}));
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        const btn = await Swal.fire({
+            title: 'คุณต้องการลบบัญชีหรือไม่',
+            showDenyButton: true,
+            confirmButtonText: `ลบ`,
+            denyButtonText: `ยกเลิก`,
+        });
+
+        if (btn.isConfirmed) {
+           await deleteAccount();
+        }
+    };
+
+    const deleteAccount = async () => {
+        const url = SERVER_URL + '/api/auth/delete-account';
+        const body = {
+            id: user.id
+        }
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        console.log(data);
+        if(res.ok){
+            Swal.fire({
+                icon: 'success',
+                title: 'ลบบัญชีสำเร็จ',
+                timer: 3000
+            });
+            logout();
+            navigate('/');
         }
     };
     return (

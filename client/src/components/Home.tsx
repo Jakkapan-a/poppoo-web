@@ -26,17 +26,6 @@ export default function Home() {
     const navigate = useNavigate();
     const {isAuth, serverUrl,topScore,setTopScore} = useAuth();
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setTimeout(async () => {
-                    const res = await fetchTopScore();
-                    handleTopScore(res);
-                }, 500);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchData();
 
         const user = localStorage.getItem('user');
         if(user !== null){
@@ -47,6 +36,25 @@ export default function Home() {
 
     socket.on('topScoresA', (data) => {
         console.log('data', data);
+    });
+    socket.on('getTopScores', (data) => {
+        if(data) {
+            setTimeout(async () => {
+                const fetchData = async () => {
+                    try {
+                        const res = await fetchTopScore();
+                        if(res === null){
+                            return;
+                        }
+                        handleTopScore(res);
+
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+                await fetchData();
+            }, 1000);
+        }
     });
     const handleTopScore = (data: TopScore[]) => {
         setTopScore(data.map((item, index) => ({
@@ -62,13 +70,33 @@ export default function Home() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
             }
         });
         if (res.ok) {
-            return await res.json();
+            const contentType = res.headers.get('content-type');
+            console.log('contentType', contentType);
+
+            if (contentType && contentType.includes('application/json')) {
+                try {
+                    const resJson = await res.json(); // Directly use .json() instead of .text() if the content is JSON
+                    return resJson;
+                } catch (err) {
+                    console.error('Error parsing JSON:', err);
+                    return null;
+                }
+            } else {
+                console.error('Expected JSON, but received:', contentType);
+                const errorText = await res.text(); // Log the HTML or error
+                console.error('Response body:', errorText);
+                return null;
+            }
+        } else {
+            console.error('Request failed with status:', res.status);
+            const errorText = await res.text(); // Log the error response
+            console.error('Error response body:', errorText);
+            return null;
         }
-        return null;
     };
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);

@@ -81,13 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             socket.disconnect();
         }
     }, []);
-    // useEffect(() => {
-    //     console.log('isAuth', isAuth);
-    // }, [isAuth]);
 
-    // useEffect(() => {
-    //     console.log('currentScore => ', currentScore);
-    // }, [currentScore]);
     const init = ()=>{
         const token = localStorage.getItem('app_token');
         if (token) {

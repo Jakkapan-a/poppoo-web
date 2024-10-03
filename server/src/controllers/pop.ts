@@ -175,8 +175,6 @@ export const popTopScore = async (req: any, res: any) => {
         if (token !== '') {
             const bearer = token.split(' ')[1];
             try {
-
-
                 const user = jwt.verify(bearer, SECRET);
                 if (user !== null && typeof user === 'object') {
                     const userInfo = await prisma.user.findFirst({
@@ -206,7 +204,6 @@ export const popTopScore = async (req: any, res: any) => {
 
                         }
                     }
-
                 }
             } catch (e: any) {
                 console.error(e.message);

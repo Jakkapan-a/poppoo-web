@@ -196,3 +196,41 @@ export const updateUsername = async (req:any, res:any) => {
         return res.status(400).json({message: e.message});
     }
 };
+
+export const deleteAccount = async (req:any, res:any) => {
+    try{
+        const {id} = req.body;
+        const user = await prisma.user.findFirst({
+            where: {
+                id: id
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({message: 'User not found'});
+        }
+
+        await prisma.token.deleteMany({
+            where: {
+                userId: id
+            }
+        });
+
+        await prisma.socket.deleteMany({
+            where: {
+                userId: id
+            }
+        });
+
+        await prisma.user.delete({
+            where: {
+                id: id
+            }
+        });
+
+        return res.json({message: 'Account deleted'});
+    }catch (e:any){
+        console.log(e.message);
+        return res.status(400).json({message: e.message});
+    }
+};

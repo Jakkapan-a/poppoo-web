@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
     checkUsername,
-    checkUsernameId,
+    checkUsernameId, deleteAccount,
     hasSignedIn,
     register,
     singIn,
@@ -21,6 +21,8 @@ router.post('/check-username', async (req:any, res:any) =>{
 router.post('/update-username', async (req:any, res:any) =>{
     await updateUsername(req, res)
 });
+
+router.post('/delete-account', async (req:any, res:any) =>{ await  deleteAccount(req, res)});
 router.get('/has-sign-in/:username', async (req:any, res:any) =>{ await hasSignedIn(req, res)});
 
 router.post('/sign-out', async (req:any, res:any) =>{ await singOut(req, res)});
