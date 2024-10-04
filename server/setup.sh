@@ -16,5 +16,6 @@ for i in $(seq 1 $TIMEOUT); do
   sleep 1
 done
 
+
 echo "Timeout reached. Executing command."
 bunx prisma migrate deploy && bun run start
