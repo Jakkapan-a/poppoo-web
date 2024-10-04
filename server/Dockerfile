@@ -20,6 +20,9 @@ ENV PATH="/root/.bun/bin:$PATH"
 # Generate Prisma Client
 RUN bunx prisma generate
 
+# Build the application
+RUN bunx prisma migrate deploy
+
 # Expose the port
 EXPOSE 3000
 
