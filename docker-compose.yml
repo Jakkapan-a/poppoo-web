@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./client/dist:/usr/share/nginx/html
+      # - ./client/dist:/usr/share/nginx/html
     ports:
       - "8080:80"
     networks:
@@ -31,7 +31,7 @@ services:
       - postgres
     working_dir: /usr/src/app
     restart: always
-    command: bun run start
+    command: ["/usr/src/app/setup.sh", "postgres_poppoo", "5432"]
 
   postgres:
     container_name: postgres_poppoo

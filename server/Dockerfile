@@ -19,10 +19,9 @@ ENV PATH="/root/.bun/bin:$PATH"
 
 # Generate Prisma Client
 RUN bunx prisma generate
-
-# Build the application
-RUN bunx prisma migrate deploy
-
+# Copy the setup.sh script into the container
+COPY setup.sh /usr/src/app/setup.sh
+RUN chmod +x /usr/src/app/setup.sh
 # Expose the port
 EXPOSE 3000
 
