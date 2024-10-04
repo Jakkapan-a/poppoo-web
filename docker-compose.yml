@@ -23,8 +23,8 @@ services:
     build: 
       context: ./server/
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     networks:
       - poppoo_network
     depends_on:
