@@ -37,4 +37,8 @@ pop-poo
 ```bash 
 git clone ...
 cd pop-poo
+docker-compose up -d --build --force-recreate
+# หรือ
+docker-compose up -d 
+```
 
