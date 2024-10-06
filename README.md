@@ -1,6 +1,9 @@
 ### POP POO APP
 
 pop poo คือ แอปพลิเคชันที่ถูกสร้างขึ้นเพื่อเป็นตัวอย่างการ ออกแบบ ระบบเว็บที่มีการ update ข้อมูลแบบ real-time 
+### ตัวอย่าง 
+<img src="./images/01.png" width="50%" height="50%">
+
 ### โครงสร้างโปรเจค
 ```bash
 pop-poo
@@ -33,12 +36,17 @@ pop-poo
 - ระหว่าง client และ server จะใช้ socket.io ในการสื่อสารข้อมูลแบบ real-time
 - ในการ deploy จะใช้ docker ในการสร้าง image และใช้ docker-compose ในการสร้าง container ของ client, server และ database
 
+<img src="./images/ER01.drawio.png" width="50%" height="50%">
+
 ### วิธีการใช้งาน
 ```bash 
-git clone ...
-cd pop-poo
-docker-compose up -d --build --force-recreate
+git clone https://github.com/Jakkapan-a/poppoo-web.git
+cd poppoo-web
+docker-compose up -d --build
 # หรือ
 docker-compose up -d 
 ```
+
+### เข้าใช้งาน
+- client: http://localhost
 
