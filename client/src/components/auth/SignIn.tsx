@@ -27,6 +27,24 @@ export default function SignIn() {
             navigate('/');
         }
 
+        // get token from url
+        const urlParams = new URLSearchParams(window.location.search);
+        const _token = urlParams.get('token');
+        console.log('url', urlParams);
+        console.log('token', _token);
+        if (_token) {
+            const id = urlParams.get('id') || "";
+            const username = urlParams.get('username') || "";
+            const user = {
+                id: parseInt(id),
+                username: username
+            };
+            console.log('user', user);
+
+            login(_token, user);
+            navigate('/', {replace: true, state: {from: '/signin'}});
+        }
+
     }, []);
 
     
@@ -135,6 +153,10 @@ export default function SignIn() {
         }
     }, []);
 
+    const handleOAuth = () => {
+        window.open(`${serverUrl}/api/auth/google`, "_self");
+    };
+
     return (
         <>
             <div className="container d-flex justify-content-between align-items-center mt-2">
@@ -179,6 +201,18 @@ export default function SignIn() {
                                             <button type="button" className="btn btn-primary mt-2"
                                                     onClick={handleSignIn}>เข้าสู่ระบบ
                                             </button>
+                                        </div>
+                                        <hr/>
+                                        <div className="mt-4 text-center">
+                                            <div className="signin-other-title">
+                                                <h5 className="fs-13 mb-2 title">เข้าสู่ระบบด้วย</h5>
+                                            </div>
+                                            <div>
+                                                <button type="button" onClick={handleOAuth}
+                                                        className="btn btn-danger btn-icon waves-effect waves-light"><i
+                                                    className="ri-google-fill fs-16"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>

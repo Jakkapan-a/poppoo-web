@@ -1,8 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import {useEffect, useState} from "react";
-import getUrls from "./utils/config.ts";
 import socket from "../socket.ts";
 import {TopScore, useAuth} from "../context/AuthContext.tsx";
 
@@ -40,19 +37,19 @@ export default function Home() {
     socket.on('getTopScores', (data) => {
         if(data) {
             setTimeout(async () => {
-                const fetchData = async () => {
-                    try {
-                        const res = await fetchTopScore();
-                        if(res === null){
-                            return;
-                        }
-                        handleTopScore(res);
-
-                    } catch (error) {
-                        console.error(error);
-                    }
-                };
-                await fetchData();
+                // const fetchData = async () => {
+                //     try {
+                //         // const res = await fetchTopScore();
+                //         // if(res === null){
+                //         //     return;
+                //         // }
+                //         // handleTopScore(res);
+                //
+                //     } catch (error) {
+                //         console.error(error);
+                //     }
+                // };
+                // await fetchData();
             }, 1000);
         }
     });
@@ -75,14 +72,14 @@ export default function Home() {
         });
         if (res.ok) {
             const contentType = res.headers.get('content-type');
-            console.log('contentType', contentType);
 
             if (contentType && contentType.includes('application/json')) {
                 try {
-                    const resJson = await res.json(); // Directly use .json() instead of .text() if the content is JSON
-                    return resJson;
+                     // Directly use .json() instead of .text() if the content is JSON
+                    return await res.json();
                 } catch (err) {
                     console.error('Error parsing JSON:', err);
+                    console.log('Response body:', await res.text());
                     return null;
                 }
             } else {

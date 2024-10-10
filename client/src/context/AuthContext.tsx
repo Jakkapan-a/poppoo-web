@@ -53,15 +53,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         window.location.href = '/';
     };
 
-    useEffect(() => {
+    socket.on('connect', () => {
 
+
+    });
+
+    useEffect(() => {
         init();
+
         socket.connect();
-        socket.on('connect', () => {
-            const _socketId = socket.id || '';
-            const token = getAccessToken() || '';
-            socket.emit('identify', {socketId: _socketId, token});
-        });
+        const _socketId = socket.id || '';
+        const token = getAccessToken() || '';
+        console.log("socket connected :", _socketId);
+
+        socket.emit('identify', {socketId: _socketId, token});
         const handleTopScore = (data: TopScore[]) => {
             setTopScore(data.map((item, index) => ({
                 ...item,
@@ -76,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const host = window.location.host;
         setServerUrl(SERVER_URL);
-        console.log('host', serverUrl);
+        console.log('host', SERVER_URL);
         return () => {
             socket.disconnect();
         }

@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
-
-
 const prisma = new PrismaClient();
 
 dotenv.config({path: __dirname + '/.env'});
@@ -55,6 +53,34 @@ export const singIn =async (req:any, res:any)=> {
         }
     });
 }
+
+export const getSingedInUser = async (id:number) => {
+    const user = await prisma.user.findFirst({
+        where: {
+            id: id
+        }
+    });
+
+    if (!user) {
+        return null;
+    }
+
+    const _token = jwt.sign({id: user.id}, SECRET);
+    await prisma.token.deleteMany({
+        where: {
+            userId: user.id
+        }
+    });
+
+    await prisma.token.create({
+        data: {
+            token: _token,
+            userId: user.id
+        }
+    });
+
+    return {token: _token};
+};
 export const register = async (req:any, res:any) => {
     let {username, password, confirmPassword} = req.body;
     if (password !== confirmPassword) {
@@ -234,3 +260,4 @@ export const deleteAccount = async (req:any, res:any) => {
         return res.status(400).json({message: e.message});
     }
 };
+

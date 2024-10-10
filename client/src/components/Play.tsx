@@ -327,8 +327,10 @@ export default function Play() {
 
             <div
                 className={`poppoo-container ${isPressed ? 'clicked' : ''}`}
-                onMouseDown={handleMouseDown}  // เมื่อกดปุ่ม
-                onMouseUp={handleMouseUp}      // เมื่อปล่อยปุ่ม
+                // onMouseDown={handleMouseDown}  // เมื่อกดปุ่ม
+                // onMouseUp={handleMouseUp}      // เมื่อปล่อยปุ่ม
+                onTouchStart={handleMouseDown} // เมื่อแตะปุ่มบนมือถือ
+                onTouchEnd={handleMouseUp}     // เมื่อปล่อยปุ่มบนมือถือ
                 tabIndex={10}
             />
 

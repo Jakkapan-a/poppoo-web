@@ -64,9 +64,22 @@ interface UserWithRank {
     updatedAt: Date;
     rank: number; // เพิ่มฟิลด์ rank
 }
-
+let lastBroadcastTime = 0;
+let cachedTopScore: UserWithRank[] = [];
 export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, socketId: string = "") => {
     try {
+
+        const currentTime = Date.now();
+
+        // ตรวจสอบว่ามีการเรียกใช้ฟังก์ชั่นภายใน 1 วินาทีหรือไม่
+        if (currentTime - lastBroadcastTime < 1000 && cachedTopScore.length > 0) {
+            console.log('Returning cached result');
+            socket.broadcast.emit('topScore', cachedTopScore);
+            socket.emit('topScore', cachedTopScore);
+            return cachedTopScore;
+        }
+
+
         // Get top score 10 users
         let topScore: UserWithRank[] = await prisma.user.findMany({
             take: 10,
@@ -138,6 +151,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
                 }
             }
         }
+        cachedTopScore = topScore;
         // ส่งข้อมูล topScore ไปยัง client
         socket.broadcast.emit('topScore', topScore);
         socket.emit('topScore', topScore);
@@ -147,11 +161,9 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
         return [];
     }
 };
-
 export const popTopScore = async (req: any, res: any) => {
     try {
         const token = req.headers.authorization || '';
-
         let topScore: UserWithRank[] = await prisma.user.findMany({
             take: 10,
             orderBy: {
@@ -163,6 +175,7 @@ export const popTopScore = async (req: any, res: any) => {
                 status: true,
                 updatedAt: true
             }
+
         }) as UserWithRank[]; //
 
         topScore = topScore
@@ -209,9 +222,10 @@ export const popTopScore = async (req: any, res: any) => {
                 console.error(e.message);
             }
         }
+
         return res.json(topScore);
     } catch (e: any) {
         return res.status(500).json({error: e.message});
     }
-
 };
+
