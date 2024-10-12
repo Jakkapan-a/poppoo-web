@@ -2,8 +2,8 @@ body{
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-
 }
+
 .poppoo{
     height: 80vh;
     position: relative;
@@ -17,14 +17,47 @@ body{
     background-size: auto;
     background-position: bottom;
     background-repeat: no-repeat;
-    background-image: url('/images/moo_dang_m0.png');
     transition: background-image 0.4s;
     cursor: pointer;
     outline: none;
 }
-.poppoo-container.clicked{
-    background-image: url('/images/moo_dang_m1.png');
+
+.poppoo-container.moo-lv0{
+    background-image: url('/images/moo_n1.png');
 }
+.poppoo-container.moo-lv0.clicked{
+    background-image: url('/images/moo_n2.png');
+}
+
+.poppoo-container.moo-lv1{
+    background-image: url('/images/moo_r1.png');
+}
+
+.poppoo-container.moo-lv1.clicked{
+    background-image: url('/images/moo_r2.png');
+}
+
+.poppoo-container.moo-lv2{
+    background-image: url('/images/moo_b1.png');
+}
+.poppoo-container.moo-lv2.clicked{
+    background-image: url('/images/moo_b2.png');
+}
+
+
+.poppoo-container.moo-lv3{
+    background-image: url('/images/moo_g1.png');
+}
+.poppoo-container.moo-lv3.clicked{
+    background-image: url('/images/moo_g2.png');
+}
+
+
+
+
+/*.poppoo-container.clicked{*/
+/*    background-image: url('/images/moo_n2.png');*/
+/*}*/
 
 .popoo-score{
     position: absolute;
@@ -46,4 +79,9 @@ body{
     /*color: white;*/
     /*font-size: 1.5rem;*/
     /*border-radius: 0 0 1px 0;*/
+}
+
+.pop-score{
+    font: 3.5rem 'Roboto', sans-serif;
+    /*color: white;*/
 }

@@ -37,19 +37,19 @@ export default function Home() {
     socket.on('getTopScores', (data) => {
         if(data) {
             setTimeout(async () => {
-                // const fetchData = async () => {
-                //     try {
-                //         // const res = await fetchTopScore();
-                //         // if(res === null){
-                //         //     return;
-                //         // }
-                //         // handleTopScore(res);
-                //
-                //     } catch (error) {
-                //         console.error(error);
-                //     }
-                // };
-                // await fetchData();
+                const fetchData = async () => {
+                    try {
+                        const res = await fetchTopScore();
+                        if(res === null){
+                            return;
+                        }
+                        handleTopScore(res);
+
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+                await fetchData();
             }, 1000);
         }
     });

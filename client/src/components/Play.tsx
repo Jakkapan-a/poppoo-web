@@ -19,6 +19,7 @@ export default function Play() {
         id: '',
         name: ''
     });
+    const [mooLv, setMooLv] = useState('moo-lv0');
 
     const [disabledButton, setDisabledButton] = useState(false);
     useEffect(() => {
@@ -65,12 +66,25 @@ export default function Play() {
         }
     }, [currentScore]);
 
+    useEffect(() => {
+        // moo-lv0, moo-lv1, moo-lv2
+        let rank = topScore.findIndex((item: TopScore) => item.username === user.name);
+        console.log('rank', rank+1);
+        if(rank >= 0 && rank <= 2){
+            setMooLv(`moo-lv1`);
+        }else if(rank > 2 && rank <= 4){
+            setMooLv('moo-lv2');
+        }else if(rank > 4 && rank <= 6){
+            setMooLv('moo-lv3');
+        }else{
+            setMooLv('moo-lv0');
+        }
+
+    }, [topScore]);
     const handleIncrease = () => {
         setScore(score + 1);
         socket.emit('addScore', {score: score + 1, userId: user.id});
     };
-
-
     const fetchScore = async () => {
         try {
             const url = SERVER_URL + '/api/pop/score';
@@ -312,7 +326,7 @@ export default function Play() {
         >
             <div className="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1>POP POO : {score}</h1>
+                    <h1>POP POO</h1>
                     <p className="">
                         คุณ :
                         {user.name}
@@ -323,35 +337,37 @@ export default function Play() {
                         <i className="bi bi-house-door-fill"/> กลับหน้าหลัก</Link>
                 </div>
             </div>
-
-
-            <div
-                className={`poppoo-container ${isPressed ? 'clicked' : ''}`}
-                // onMouseDown={handleMouseDown}  // เมื่อกดปุ่ม
-                // onMouseUp={handleMouseUp}      // เมื่อปล่อยปุ่ม
-                onTouchStart={handleMouseDown} // เมื่อแตะปุ่มบนมือถือ
-                onTouchEnd={handleMouseUp}     // เมื่อปล่อยปุ่มบนมือถือ
-                tabIndex={10}
-            />
-
-            <div className={`popoo-score`}>
-                <ul className="list-group">
-                    {popScore()}
-                </ul>
+            <div className="d-flex justify-content-xl-center justify-content-start">
+                <h1 className="pop-score">{score}</h1>
             </div>
-            <div className={`popoo-play-sound`} style={{cursor: 'pointer'}} onClick={handleCheckSound}>
-                {isSound ? <>
-                    <i className="bi bi-volume-up-fill" style={{fontSize: '4rem'}}/>
-                </> : <>
-                    <i className="bi bi-volume-mute-fill" style={{fontSize: '4rem'}}/>
-                </>}
+
+                <div
+                    className={`poppoo-container ${isPressed ? 'clicked' : ''} ${mooLv} `}
+                    // onMouseDown={handleMouseDown}  // เมื่อกดปุ่ม
+                    // onMouseUp={handleMouseUp}      // เมื่อปล่อยปุ่ม
+                    onTouchStart={handleMouseDown} // เมื่อแตะปุ่มบนมือถือ
+                    onTouchEnd={handleMouseUp}     // เมื่อปล่อยปุ่มบนมือถือ
+                    tabIndex={10}
+                />
+
+                <div className={`popoo-score`}>
+                    <ul className="list-group">
+                        {popScore()}
+                    </ul>
+                </div>
+                <div className={`popoo-play-sound`} style={{cursor: 'pointer'}} onClick={handleCheckSound}>
+                    {isSound ? <>
+                        <i className="bi bi-volume-up-fill" style={{fontSize: '4rem'}}/>
+                    </> : <>
+                        <i className="bi bi-volume-mute-fill" style={{fontSize: '4rem'}}/>
+                    </>}
 
 
+                </div>
+                <a className="btn btn-primary" data-bs-toggle="modal" href="#manageUser" role="button">
+                    <i className="bi bi-person-fill"/> จัดการผู้ใช้
+                </a>
+                {model()}
             </div>
-            <a className="btn btn-primary" data-bs-toggle="modal" href="#manageUser" role="button">
-                <i className="bi bi-person-fill"/> จัดการผู้ใช้
-            </a>
-            {model()}
-        </div>
-    );
-}
+            );
+            }
