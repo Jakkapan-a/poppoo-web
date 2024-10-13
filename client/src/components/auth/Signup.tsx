@@ -119,7 +119,9 @@ export default function Signup() {
             signIn?.classList.remove('d-none');
         }
     }, []);
-
+    const handleOAuth = () => {
+        window.open(`${serverUrl}/api/auth/google`, "_self");
+    };
     return (
         <>
             <div className="container d-flex justify-content-between align-items-center mt-2">
@@ -185,6 +187,19 @@ export default function Signup() {
                                             <button type="button" onClick={handleSignUp}
                                                     className="btn btn-primary mt-3"> สมัครสมาชิก
                                             </button>
+                                        </div>
+
+                                        <hr/>
+                                        <div className="mt-4 text-center">
+                                            <div className="signin-other-title">
+                                                <h5 className="fs-13 mb-2 title">เข้าสู่ระบบด้วย</h5>
+                                            </div>
+                                            <div>
+                                                <button type="button" onClick={handleOAuth}
+                                                        className="btn btn-danger btn-icon waves-effect waves-light"><i
+                                                    className="ri-google-fill fs-16"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>

@@ -2,17 +2,17 @@ import {io, Socket} from 'socket.io-client';
 
 const host = window.location.host;
 
-// export const SERVER_URL = `http://${host}`;
-export const SERVER_URL = `http://localhost:3000`;
+export const SERVER_URL = `http://${host}`;
+// export const SERVER_URL = `http://localhost:3000`;
 
 const socket: Socket = io(SERVER_URL,{
     autoConnect: false,
     
 });
 
-socket.onAny((event, ...args) => {
-    console.log(event, args);
-});
+// socket.onAny((event, ...args) => {
+//     console.log(event, args);
+// });
 
 interface TopScore {
     username: string,

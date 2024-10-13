@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-#   Simple wait script that pauses for a specified amount of time
-
 TIMEOUT=5
 HOST=$1
 PORT=$2

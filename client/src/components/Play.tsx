@@ -69,7 +69,7 @@ export default function Play() {
     useEffect(() => {
         // moo-lv0, moo-lv1, moo-lv2
         let rank = topScore.findIndex((item: TopScore) => item.username === user.name);
-        console.log('rank', rank+1);
+        // console.log('rank', rank+1);
         if(rank >= 0 && rank <= 2){
             setMooLv(`moo-lv1`);
         }else if(rank > 2 && rank <= 4){

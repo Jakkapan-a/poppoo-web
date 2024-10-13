@@ -17,7 +17,7 @@ require('./strategies/google.ts');
 const prisma = new PrismaClient();
 dotenv.config();
 const PORT = process.env.PORT || 3000;
-
+const REDIRECT_URL = process.env.REDIRECT_URL || 'http://localhost';
 const app = express();
 const httpServer = createServer(app);
 let io = new Server(httpServer, {
@@ -344,10 +344,7 @@ app.get('/api/google/callback',
         if(_token === null){
             return res.json({message: 'error'});
         }
-        return res.redirect(`http://localhost:5173/signin?token=${_token.token}&username=${user.username}&id=${user.id}`);
-       // return res.redirect(`/signin?token=${_token.token}&username=${user.username}&id=${user.id}`);
-
-        // return res.json({message: 'success'});
+        return res.redirect(`${REDIRECT_URL}?token=${_token.token}&username=${user.username}&id=${user.id}`);
     });
 
 
