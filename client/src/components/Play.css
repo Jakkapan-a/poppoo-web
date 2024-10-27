@@ -38,7 +38,7 @@ body{
 }
 
 .poppoo-container.moo-lv2{
-    background-image: url('/images/moo_b1.png');
+    background-image: url('/images/moo_n1.png');
 }
 .poppoo-container.moo-lv2.clicked{
     background-image: url('/images/moo_b2.png');
@@ -46,7 +46,7 @@ body{
 
 
 .poppoo-container.moo-lv3{
-    background-image: url('/images/moo_g1.png');
+    background-image: url('/images/moo_n1.png');
 }
 .poppoo-container.moo-lv3.clicked{
     background-image: url('/images/moo_g2.png');
