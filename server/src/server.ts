@@ -308,6 +308,7 @@ app.get('/test/:userId', async (req: any, res: any) => {
     console.log('socketData', socketData);
     return res.json(socketData);
 });
+
 passport.serializeUser((user: any, done: any) => {
     done(null, user);
 });

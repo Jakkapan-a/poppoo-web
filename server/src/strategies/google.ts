@@ -12,15 +12,9 @@ passport.use(<passport.Strategy>new GoogleStrategy({
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
         callbackURL: GOOGLE_CALLBACK_URL,
-        // passReqToCallback: true,
         scope: ['profile', 'email']
     },
-    async (
-        accessToken: string,
-        refreshToken: string,
-        profile: Profile,
-        done: VerifyCallback
-    ) => {
+    async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback ) => {
         console.log({accessToken});
         console.log({email: profile.emails});
         let email: string | undefined;
@@ -46,8 +40,6 @@ passport.use(<passport.Strategy>new GoogleStrategy({
                 });
             }
         }
-
-
         done(null, {username: profile.displayName, email: email});
     }
 ));
