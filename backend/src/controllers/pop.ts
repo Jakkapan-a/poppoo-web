@@ -103,7 +103,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
             }));
 
         if (socketId != "") {
-            const userInSocket = await prisma.socket.findFirst({
+            const userInSocket = await prisma.sessionSocket.findFirst({
                 include: {
                     user: true
                 },
@@ -152,7 +152,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
             }
         }
         cachedTopScore = topScore;
-        // ส่งข้อมูล topScore ไปยัง client
+        // ส่งข้อมูล topScore ไปยัง frontend
         socket.broadcast.emit('topScore', topScore);
         socket.emit('topScore', topScore);
         return topScore;

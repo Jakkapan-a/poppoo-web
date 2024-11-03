@@ -1,35 +1,34 @@
 services:
-  web:
-    container_name: web
-    build: 
-      context: ./client/
-      dockerfile: Dockerfile
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      # - ./client/dist:/usr/share/nginx/html
-    ports:
-      - "80:80"
-    networks:
-      - poppoo_network
-    depends_on:
-      - postgres
-      - web_service
-    restart: always
-
-  web_service:
-    container_name: web_service
-    build: 
-      context: ./server/
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    networks:
-      - poppoo_network
-    depends_on:
-      - postgres
-    working_dir: /usr/src/app
-    restart: always
-    command: ["/usr/src/app/setup.sh", "postgres_poppoo", "5432"]
+#  frontend:
+#    container_name: web
+#    build:
+#      context: ./frontend/
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+#    ports:
+#      - "80:80"
+#    networks:
+#      - poppoo_network
+#    depends_on:
+#      - postgres
+#      - web_service
+#    restart: always
+#
+#  backend:
+#    container_name: backend
+#    build:
+#      context: ./server/
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - poppoo_network
+#    depends_on:
+#      - postgres
+#    working_dir: /usr/src/app
+#    restart: always
+#    command: ["/usr/src/app/setup.sh", "postgres_poppoo", "5432"]
 
   postgres:
     container_name: postgres_poppoo

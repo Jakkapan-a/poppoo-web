@@ -7,7 +7,7 @@ pop poo คือ แอปพลิเคชันที่ถูกสร้�
 ### โครงสร้างโปรเจค
 ```bash
 pop-poo
-├── client
+├── frontend
 │   ├── public
 │   └── src
 │       ├── components
@@ -30,9 +30,10 @@ pop-poo
 ```
 
 ### Features
-- Authentication (JWT) and login with Google
+- Authentication (JWT)
+- Google OAuth2.0
 - Real-time update
-- CRUD operation
+- RESTful API
 
 ### คำอธิบายโครงสร้างโปรเจค
 - client จะเป็นส่วนของ frontend ที่ใช้ React ในการพัฒนา
@@ -53,5 +54,5 @@ docker-compose up -d
 ```
 
 ### เข้าใช้งาน
-- client: http://localhost
+- client: http://ip_address
 

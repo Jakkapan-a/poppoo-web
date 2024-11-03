@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getAccessToken, setAccessToken} from "../components/utils/helper.ts";
 import socket, {SERVER_URL} from "../socket.ts";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 
 
 interface UserContext

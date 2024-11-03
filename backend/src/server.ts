@@ -81,14 +81,14 @@ io.on('connection', async (socket) => {
                 }
             });
 
-            const existingSocket = await prisma.socket.findFirst({
+            const existingSocket = await prisma.sessionSocket.findFirst({
                 where: { socketId: socketId }
             });
 
             if (!existingSocket) {
                 // create socket if not exists
                 try {
-                    await prisma.socket.create({
+                    await prisma.sessionSocket.create({
                         data: {
                             socketId: socketId,
                             userId: tokenData.userId
@@ -154,14 +154,14 @@ io.on('connection', async (socket) => {
 
 
                 // delete socket
-                const sockets = await prisma.socket.findMany({
+                const sockets = await prisma.sessionSocket.findMany({
                     where: {
                         userId: id
                     }
                 });
 
                 sockets.forEach((s) => {
-                    prisma.socket.delete({
+                    prisma.sessionSocket.delete({
                         where: {
                             id: s.id
                         }
@@ -209,7 +209,7 @@ io.on('connection', async (socket) => {
     socket.on('disconnect', async (_socket: DisconnectReason) => {
         console.log(`Socket ${socketId} disconnected`);
         try {
-            const socketData = await prisma.socket.findFirst({
+            const socketData = await prisma.sessionSocket.findFirst({
                 include: {
                     user: true
                 },
@@ -233,7 +233,7 @@ io.on('connection', async (socket) => {
                 }
             });
             console.log('user status updated', socketData.userId);
-            const sockets = await prisma.socket.findMany({
+            const sockets = await prisma.sessionSocket.findMany({
                 where: {
                     userId: socketData.userId
                 }
@@ -241,7 +241,7 @@ io.on('connection', async (socket) => {
             try {
                 for (const s of sockets) {
                     try {
-                        await prisma.socket.delete({
+                        await prisma.sessionSocket.delete({
                             where: {
                                 id: s.id
                             }
@@ -295,12 +295,12 @@ app.get('/test/:userId', async (req: any, res: any) => {
     const { userId } = req.params;
     console.log('socketId', userId);
 
-    const socketData = await prisma.socket.findMany({
+    const socketData = await prisma.sessionSocket.findMany({
         where: {
             userId: typeof userId === 'string' ? parseInt(userId) : userId
         }
     });
-    await prisma.socket.findMany({
+    await prisma.sessionSocket.findMany({
         where: {
             userId: typeof userId === 'string' ? parseInt(userId) : userId
         }
@@ -319,9 +319,7 @@ passport.deserializeUser((obj: any, done: any) => {
 
 app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/api/google/callback',
-    passport.authenticate('google'),
-   async (req:any, res:any) => {
+app.get('/api/google/callback',passport.authenticate('google'),async (req:any, res:any) => {
         // Successful authentication, redirect home.
         console.log('google callback:', req.user);
         // console.log({"req":req.user,});
@@ -347,7 +345,6 @@ app.get('/api/google/callback',
         }
         return res.redirect(`${REDIRECT_URL}?token=${_token.token}&username=${user.username}&id=${user.id}`);
     });
-
 
 // List all routes
 console.table(routes(app));

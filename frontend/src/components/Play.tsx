@@ -6,8 +6,6 @@ import './Play.css';
 import CSS from "csstype";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Swal from "sweetalert2";
-// background: rgb(238,208,174);
-// background: radial-gradient(circle, rgba(238,208,174,1) 0%, rgba(233,189,148,1) 100%);
 export default function Play() {
     const navigate = useNavigate();
     const [score, setScore] = useState(0);

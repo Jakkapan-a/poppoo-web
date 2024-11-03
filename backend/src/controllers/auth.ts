@@ -81,6 +81,7 @@ export const getSingedInUser = async (id:number) => {
 
     return {token: _token};
 };
+
 export const register = async (req:any, res:any) => {
     let {username, password, confirmPassword} = req.body;
     if (password !== confirmPassword) {
@@ -242,7 +243,7 @@ export const deleteAccount = async (req:any, res:any) => {
             }
         });
 
-        await prisma.socket.deleteMany({
+        await prisma.sessionSocket.deleteMany({
             where: {
                 userId: id
             }
