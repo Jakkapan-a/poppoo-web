@@ -29,6 +29,11 @@ pop-poo
 └── ...
 ```
 
+### Features
+- Authentication (JWT) and login with Google
+- Real-time update
+- CRUD operation
+
 ### คำอธิบายโครงสร้างโปรเจค
 - client จะเป็นส่วนของ frontend ที่ใช้ React ในการพัฒนา
 - server จะเป็นส่วนของ backend ที่ใช้ express + prisma + bun runtime ในการพัฒนา
