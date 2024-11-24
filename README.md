@@ -1,12 +1,13 @@
 ### POP POO APP
+## บทนำ
+poppoo คือ เป็นแอปพลิเคชันที่ถูกสร้างขึ้นเพื่อเป็นตัวอย่างการ ออกแบบ ระบบเว็บที่มีการ update ข้อมูลแบบ real-time มีระบบ login จัดอันดับ score แบบ real-time
 
-pop poo คือ แอปพลิเคชันที่ถูกสร้างขึ้นเพื่อเป็นตัวอย่างการ ออกแบบ ระบบเว็บที่มีการ update ข้อมูลแบบ real-time 
 ### ตัวอย่าง 
 <img src="./images/01.png" width="50%" height="50%">
 
 ### โครงสร้างโปรเจค
 ```bash
-pop-poo
+poppoo-app
 ├── frontend
 │   ├── public
 │   └── src
@@ -56,3 +57,8 @@ docker-compose up -d
 ### เข้าใช้งาน
 - client: http://ip_address
 
+### โครงการนี้เป็นส่วนหนึ่งของหลักสูตร วิศวกรรมคอมพิวเตอร์
+- วิชา CT648 วิศวกรรมเว็บและคลาวด์
+- อาจารย์ผู้สอน ผู้ช่วยศาสตราจารย์ ดร.ชัยพร เขมะภาตะพันธ์
+<!-- Link -->
+Link [click-here](https://cite.dpu.ac.th/ct/master-ct/research_chaiyaporn.html).
