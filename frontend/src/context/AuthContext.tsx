@@ -78,8 +78,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setCurrentScore(data.score);
         });
 
-
-        const host = window.location.host;
         setServerUrl(SERVER_URL);
         console.log('host', SERVER_URL);
         return () => {

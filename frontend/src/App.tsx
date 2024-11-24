@@ -13,6 +13,7 @@ import Signup from "./components/auth/Signup.tsx";
 import {getAccessToken} from "./components/utils/helper.ts";
 import Play from "./components/Play.tsx";
 import {useAuth} from "./context/AuthContext.tsx";
+import About from "./components/About.tsx";
 
 const App = () => {
     const {logout} = useAuth();
@@ -56,6 +57,7 @@ const App = () => {
                     <Route path="/signin" element={<SignIn />}/>
                     <Route path="/signup" element={<Signup />}/>
                     <Route path="/play" element={<Play/>}/>
+                    <Route path="/about" element={<About/>}/>
                 </Routes>
             </div>
         </>

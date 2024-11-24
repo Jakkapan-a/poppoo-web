@@ -7,7 +7,7 @@ import socket from "../../socket.ts";
 export default function Navbar() {
     const {isAuth, login, logout} = useAuth();
     const navigate = useNavigate();
-    const newNav = true;
+    const newNav = false;
     const handleLogout = () => {
         const localUser =localStorage.getItem('user');
         socket.emit('sign-out-btn', localUser);
@@ -40,13 +40,13 @@ export default function Navbar() {
         if (isAuth) {
             return (
                 <>
-                    <button className="btn btn-danger sign-out" id="sign-out" onClick={handleLogout}>ออกจากระบบ</button>
+                    <button className="btn btn-danger sign-out m-2" id="sign-out" onClick={handleLogout}>ออกจากระบบ</button>
                 </>
             );
         }
         return (
             <>
-                <Link className="btn btn-primary sign-in" id="sign-in"  to="/signin">เข้าสู่ระบบ</Link>
+                <Link className="btn btn-primary sign-in m-2" id="sign-in"  to="/signin">เข้าสู่ระบบ</Link>
             </>
         );
     };
@@ -58,6 +58,7 @@ export default function Navbar() {
                     <div className="row">
                         <div className="col-12 text-end">
                             <div>
+                                <NavLink to="/about" className="btn btn-primary m-2" aria-activedescendant="active">เกี่ยวกับ</NavLink>
                                 {showAuthNewMenu()}
                             </div>
                         </div>
@@ -65,7 +66,7 @@ export default function Navbar() {
                 </div>
                 </> :
                 <>
-                    <nav className="navbar navbar-expand-lg navbar-light navbar-dark bg-primary">
+                    <nav className="navbar navbar-expand-lg navbar-light navbar-dark bg-dark">
                     <div className="container">
                         <NavLink to="/" className="navbar-brand">PopPoo</NavLink>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -80,14 +81,21 @@ export default function Navbar() {
                                              aria-current="page">หน้าหลัก</NavLink>
                                 </li>
 
+                                <li className="nav-item">
+                                    <NavLink to="/about" className="nav-link" aria-activedescendant="active">เกี่ยวกับ</NavLink>
+                                </li>
+
                                 {isAuth ? (
+
                                     <li className="nav-item">
                                         <NavLink to="/play" className="nav-link"
                                                  aria-activedescendant="active">เล่น</NavLink>
                                     </li>
+
                                 ) : ''}
                             </ul>
                             <div className="navbar-text text-center">
+
                                 {showAuthMenu()}
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import socket from "../socket.ts";
+import socket, {SERVER_URL} from "../socket.ts";
 import {TopScore, useAuth} from "../context/AuthContext.tsx";
 
 const initialScore = [
@@ -61,8 +61,9 @@ export default function Home() {
     };
 
     const fetchTopScore = async () => {
-        const url = serverUrl + '/api/top-score';
+        const url = SERVER_URL + '/api/top-score';
         const token = localStorage.getItem('app_token');
+        // console.log('url', url);
         const res = await fetch(url, {
             method: 'GET',
             headers: {
@@ -72,11 +73,12 @@ export default function Home() {
         });
         if (res.ok) {
             const contentType = res.headers.get('content-type');
-
             if (contentType && contentType.includes('application/json')) {
                 try {
-                     // Directly use .json() instead of .text() if the content is JSON
-                    return await res.json();
+
+                    const data = await res.json();
+                    // console.log('data', data);
+                    return data;
                 } catch (err) {
                     console.error('Error parsing JSON:', err);
                     console.log('Response body:', await res.text());
