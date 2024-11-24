@@ -3,6 +3,6 @@
 export default function getUrls() {
   return [
       {
-          ApiUrl: 'http://localhost:3000',
+          ApiUrl: 'http://13.250.123.133:3000',
       }];
 }
