@@ -1,47 +1,47 @@
 services:
-#  frontend:
-#    container_name: web
-#    build:
-#      context: ./frontend/
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-#    ports:
-#      - "80:80"
-#    networks:
-#      - poppoo_network
-#    depends_on:
-#      - postgres
-#      - web_service
-#    restart: always
-#
-#  backend:
-#    container_name: backend
-#    build:
-#      context: ./server/
-#      dockerfile: Dockerfile
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      - poppoo_network
-#    depends_on:
-#      - postgres
-#    working_dir: /usr/src/app
-#    restart: always
-#    command: ["/usr/src/app/setup.sh", "postgres_poppoo", "5432"]
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ./frontend/
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - poppoo_network
+  #   depends_on:
+  #     - postgres
+  #     - backend
+  #   restart: always
+
+  # backend:
+  #   container_name: backend
+  #   build:
+  #     context: ./backend/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - poppoo_network
+  #   depends_on:
+  #     - postgres
+  #   working_dir: /usr/src/app
+  #   restart: always
+  #   command: ["/usr/src/app/setup.sh", "postgres_poppoo", "5432"]
 
   postgres:
     container_name: postgres_poppoo
-    image: postgres
+    image: postgres:16
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-12345678}
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       PGDATA: /data/postgres
     volumes:
       - ./postgres:/data/postgres
     ports:
-      - "6435:5432"
+      - "5432:5432"
     networks:
       - poppoo_network
     restart: always
