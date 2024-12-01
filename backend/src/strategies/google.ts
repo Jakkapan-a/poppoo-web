@@ -23,7 +23,7 @@ passport.use(<passport.Strategy>new GoogleStrategy({
             email = profile.emails[0].value;
             console.log(email);
 
-            const user = await prisma.user.count({
+            const user = await prisma.userDB.count({
                 where: {
                     username: email
                 }
@@ -31,7 +31,7 @@ passport.use(<passport.Strategy>new GoogleStrategy({
 
             if(user === 0)
             {
-                await prisma.user.create({
+                await prisma.userDB.create({
                     data: {
                         username: email,
                         password: 'google',

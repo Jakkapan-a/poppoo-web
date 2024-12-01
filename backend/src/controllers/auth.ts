@@ -10,7 +10,7 @@ const SECRET = process.env.SECRET || 'secret';
 
 export const singIn =async (req:any, res:any)=> {
     const {username, password} = req.body;
-    const user = await prisma.jA030_User.findUnique({
+    const user = await prisma.userDB.findUnique({
         where: {
             username: username
         }
@@ -25,20 +25,20 @@ export const singIn =async (req:any, res:any)=> {
 
     const _token = jwt.sign({id: user.id}, SECRET);
 
-    await prisma.jA030_Token.deleteMany({
+    await prisma.tokenDb.deleteMany({
         where: {
             userId: user.id
         },
     });
 
-    await prisma.jA030_Token.create({
+    await prisma.tokenDb.create({
         data: {
             token: _token,
             userId: user.id
         }
     });
 
-    await prisma.jA030_User.update({
+    await prisma.userDB.update({
         where: {
             id: user.id
         },
@@ -55,7 +55,7 @@ export const singIn =async (req:any, res:any)=> {
 }
 
 export const getSingedInUser = async (id:number) => {
-    const user = await prisma.jA030_User.findFirst({
+    const user = await prisma.userDB.findFirst({
         where: {
             id: id
         }
@@ -66,13 +66,13 @@ export const getSingedInUser = async (id:number) => {
     }
 
     const _token = jwt.sign({id: user.id}, SECRET);
-    await prisma.jA030_Token.deleteMany({
+    await prisma.tokenDb.deleteMany({
         where: {
             userId: user.id
         }
     });
 
-    await prisma.jA030_Token.create({
+    await prisma.tokenDb.create({
         data: {
             token: _token,
             userId: user.id
@@ -87,7 +87,7 @@ export const register = async (req:any, res:any) => {
     if (password !== confirmPassword) {
         return res.status(400).json({message: 'Password not match'});
     }
-    let user = await prisma.jA030_User.findUnique({
+    let user = await prisma.userDB.findUnique({
         where: {
             username: username
         }
@@ -98,7 +98,7 @@ export const register = async (req:any, res:any) => {
     }
 
     const hash = await bcrypt.hash(password, 10);
-    user = await prisma.jA030_User.create({
+    user = await prisma.userDB.create({
         data: {
             username: username,
             password: hash,
@@ -106,12 +106,12 @@ export const register = async (req:any, res:any) => {
         }
     });
     const token = jwt.sign({id: user.id}, SECRET);
-    await prisma.jA030_Token.deleteMany({
+    await prisma.tokenDb.deleteMany({
         where: {
             userId: user.id
         }
     });
-    await prisma.jA030_Token.create({
+    await prisma.tokenDb.create({
         data: {
             token: token,
             userId: user.id,
@@ -122,7 +122,7 @@ export const register = async (req:any, res:any) => {
 
 export const checkUsername = async (req:any, res:any) => {
     const {username} = req.params;
-    const user = await prisma.jA030_User.findUnique({
+    const user = await prisma.userDB.findUnique({
         where: {
             username: username
         }
@@ -136,7 +136,7 @@ export const checkUsername = async (req:any, res:any) => {
 export const hasSignedIn = async (req:any, res:any) => {
     const {username} = req.params;
     // console.log(username);
-    const user = await prisma.jA030_User.findFirst({
+    const user = await prisma.userDB.findFirst({
         include:{
             tokens: true
         },
@@ -155,7 +155,7 @@ export const hasSignedIn = async (req:any, res:any) => {
 
 export const singOut = async (req:any, res:any) => {
     const {username} = req.body;
-    const user = await prisma.jA030_User.findFirst({
+    const user = await prisma.userDB.findFirst({
         include:{
             tokens: true
         },
@@ -176,7 +176,7 @@ export const singOut = async (req:any, res:any) => {
         return res.status(401).json({message: 'Unauthorized'});
     }
 
-    await prisma.jA030_Token.deleteMany({
+    await prisma.tokenDb.deleteMany({
         where: {
             userId: user.id
         }
@@ -190,7 +190,7 @@ export const checkUsernameId = async (req:any, res:any) => {
     console.log(username, id);
 
     // Check if username is available with id
-    const user = await prisma.jA030_User.findFirst({
+    const user = await prisma.userDB.findFirst({
         where: {
             username: username,
             NOT: {
@@ -209,7 +209,7 @@ export const updateUsername = async (req:any, res:any) => {
     try{
         const {username, id} = req.body;
 
-        const user = await prisma.jA030_User.update({
+        const user = await prisma.userDB.update({
             where: {
                 id: id
             },
@@ -227,7 +227,7 @@ export const updateUsername = async (req:any, res:any) => {
 export const deleteAccount = async (req:any, res:any) => {
     try{
         const {id} = req.body;
-        const user = await prisma.jA030_User.findFirst({
+        const user = await prisma.userDB.findFirst({
             where: {
                 id: id
             }
@@ -237,19 +237,19 @@ export const deleteAccount = async (req:any, res:any) => {
             return res.status(404).json({message: 'User not found'});
         }
 
-        await prisma.jA030_Token.deleteMany({
+        await prisma.tokenDb.deleteMany({
             where: {
                 userId: id
             }
         });
 
-        await prisma.jA030_SessionSocket.deleteMany({
+        await prisma.sessionSocketDb.deleteMany({
             where: {
                 userId: id
             }
         });
 
-        await prisma.jA030_User.delete({
+        await prisma.userDB.delete({
             where: {
                 id: id
             }

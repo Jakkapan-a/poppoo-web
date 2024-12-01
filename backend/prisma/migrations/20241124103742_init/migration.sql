@@ -22,7 +22,7 @@ DROP TABLE "Token";
 DROP TABLE "User";
 
 -- CreateTable
-CREATE TABLE "JA030_User" (
+CREATE TABLE "UserDB" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -31,42 +31,42 @@ CREATE TABLE "JA030_User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "JA030_User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "UserDB_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "JA030_Token" (
+CREATE TABLE "TokenDb" (
     "id" SERIAL NOT NULL,
     "token" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "JA030_Token_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "TokenDb_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "JA030_SessionSocket" (
+CREATE TABLE "SessionSocketDb" (
     "id" SERIAL NOT NULL,
     "socketId" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "JA030_SessionSocket_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "SessionSocketDb_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "JA030_User_username_key" ON "JA030_User"("username");
+CREATE UNIQUE INDEX "UserDB_username_key" ON "UserDB"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "JA030_Token_token_key" ON "JA030_Token"("token");
+CREATE UNIQUE INDEX "TokenDb_token_key" ON "TokenDb"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "JA030_SessionSocket_socketId_key" ON "JA030_SessionSocket"("socketId");
+CREATE UNIQUE INDEX "SessionSocketDb_socketId_key" ON "SessionSocketDb"("socketId");
 
 -- AddForeignKey
-ALTER TABLE "JA030_Token" ADD CONSTRAINT "JA030_Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "JA030_User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TokenDb" ADD CONSTRAINT "TokenDb_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserDB"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "JA030_SessionSocket" ADD CONSTRAINT "JA030_SessionSocket_userId_fkey" FOREIGN KEY ("userId") REFERENCES "JA030_User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "SessionSocketDb" ADD CONSTRAINT "SessionSocketDb_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserDB"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

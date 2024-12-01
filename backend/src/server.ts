@@ -61,7 +61,7 @@ io.on('connection', async (socket) => {
             }
             cache.set(cacheKey, true);
             console.log('identify', data);
-            const tokenData = await prisma.jA030_Token.findFirst({
+            const tokenData = await prisma.tokenDb.findFirst({
                 where: {
                     token: token
                 }
@@ -72,7 +72,7 @@ io.on('connection', async (socket) => {
             }
 
             // update user online status
-            await prisma.jA030_User.update({
+            await prisma.userDB.update({
                 where: {
                     id: tokenData.userId
                 },
@@ -81,14 +81,14 @@ io.on('connection', async (socket) => {
                 }
             });
 
-            const existingSocket = await prisma.jA030_SessionSocket.findFirst({
+            const existingSocket = await prisma.sessionSocketDb.findFirst({
                 where: { socketId: socketId }
             });
 
             if (!existingSocket) {
                 // create socket if not exists
                 try {
-                    await prisma.jA030_SessionSocket.create({
+                    await prisma.sessionSocketDb.create({
                         data: {
                             socketId: socketId,
                             userId: tokenData.userId
@@ -110,7 +110,7 @@ io.on('connection', async (socket) => {
 
         socket.on('sign-out', async (data) => {
             const { username } = data;
-            const user = await prisma.jA030_User.findFirst({
+            const user = await prisma.userDB.findFirst({
                 where: {
                     username: username
                 }
@@ -132,7 +132,7 @@ io.on('connection', async (socket) => {
             try {
                 const { username, id } = JSON.parse(data);
                 console.log('sign-out-btn', data);
-                const user = await prisma.jA030_User.findFirst({
+                const user = await prisma.userDB.findFirst({
                     where: {
                         username: username
                     }
@@ -143,7 +143,7 @@ io.on('connection', async (socket) => {
                 }
 
                 // update user status
-                await prisma.jA030_User.update({
+                await prisma.userDB.update({
                     where: {
                         id: id
                     },
@@ -154,14 +154,14 @@ io.on('connection', async (socket) => {
 
 
                 // delete socket
-                const sockets = await prisma.jA030_SessionSocket.findMany({
+                const sockets = await prisma.sessionSocketDb.findMany({
                     where: {
                         userId: id
                     }
                 });
 
                 sockets.forEach((s) => {
-                    prisma.jA030_SessionSocket.delete({
+                    prisma.sessionSocketDb.delete({
                         where: {
                             id: s.id
                         }
@@ -171,13 +171,13 @@ io.on('connection', async (socket) => {
                 });
 
                 // delete token
-                const tokens = await prisma.jA030_Token.findMany({
+                const tokens = await prisma.tokenDb.findMany({
                     where: {
                         userId: id
                     }
                 });
                 tokens.forEach((t) => {
-                    prisma.jA030_Token.delete({
+                    prisma.tokenDb.delete({
                         where: {
                             id: t.id
                         }
@@ -209,7 +209,7 @@ io.on('connection', async (socket) => {
     socket.on('disconnect', async (_socket: DisconnectReason) => {
         console.log(`Socket ${socketId} disconnected`);
         try {
-            const socketData = await prisma.jA030_SessionSocket.findFirst({
+            const socketData = await prisma.sessionSocketDb.findFirst({
                 include: {
                     user: true
                 },
@@ -224,7 +224,7 @@ io.on('connection', async (socket) => {
             }
             console.log('User update status to offline', socketData.userId);
 
-            await prisma.jA030_User.update({
+            await prisma.userDB.update({
                 where: {
                     id: socketData.userId
                 },
@@ -233,7 +233,7 @@ io.on('connection', async (socket) => {
                 }
             });
             console.log('user status updated', socketData.userId);
-            const sockets = await prisma.jA030_SessionSocket.findMany({
+            const sockets = await prisma.sessionSocketDb.findMany({
                 where: {
                     userId: socketData.userId
                 }
@@ -241,7 +241,7 @@ io.on('connection', async (socket) => {
             try {
                 for (const s of sockets) {
                     try {
-                        await prisma.jA030_SessionSocket.delete({
+                        await prisma.sessionSocketDb.delete({
                             where: {
                                 id: s.id
                             }
@@ -295,12 +295,12 @@ app.get('/test/:userId', async (req: any, res: any) => {
     const { userId } = req.params;
     console.log('socketId', userId);
 
-    const socketData = await prisma.jA030_SessionSocket.findMany({
+    const socketData = await prisma.sessionSocketDb.findMany({
         where: {
             userId: typeof userId === 'string' ? parseInt(userId) : userId
         }
     });
-    await prisma.jA030_SessionSocket.findMany({
+    await prisma.sessionSocketDb.findMany({
         where: {
             userId: typeof userId === 'string' ? parseInt(userId) : userId
         }
@@ -324,7 +324,7 @@ app.get('/api/google/callback',passport.authenticate('google'),async (req:any, r
         console.log('google callback:', req.user);
         // console.log({"req":req.user,});
         const email = req.user.email;
-        const user = await  prisma.jA030_User.findFirst({
+        const user = await  prisma.userDB.findFirst({
             where: {
                 username: email
             }

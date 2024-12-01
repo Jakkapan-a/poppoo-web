@@ -21,7 +21,7 @@ export const popMiddleware = async (req:any, res:any, next:any) => {
         req.user =jwt.verify(token, SECRET);
         console.log(req.user);
 
-        const findToken = await prisma.jA030_Token.count({
+        const findToken = await prisma.tokenDb.count({
             where: {
                 token: token
             }

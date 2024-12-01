@@ -13,7 +13,7 @@ export const popScore = async (req: any, res: any) => {
             return res.status(401).json({message: 'Unauthorized'});
         }
         const userId = user.id;
-        const userFind = await prisma.jA030_User.findFirst({
+        const userFind = await prisma.userDB.findFirst({
             where: {
                 id: userId
             }
@@ -31,13 +31,13 @@ export const popScore = async (req: any, res: any) => {
 
 export const addScore = async (userId: number, score: number) => {
     try {
-        const user = await prisma.jA030_User.findFirst({
+        const user = await prisma.userDB.findFirst({
             where: {
                 id: userId
             }
         });
         if (user !== null) {
-            const userScore = await prisma.jA030_User.update({
+            const userScore = await prisma.userDB.update({
                 where: {
                     id: userId
                 },
@@ -81,7 +81,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
 
 
         // Get top score 10 users
-        let topScore: UserWithRank[] = await prisma.jA030_User.findMany({
+        let topScore: UserWithRank[] = await prisma.userDB.findMany({
             take: 10,
             orderBy: {
                 score: 'desc'
@@ -103,7 +103,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
             }));
 
         if (socketId != "") {
-            const userInSocket = await prisma.jA030_SessionSocket.findFirst({
+            const userInSocket = await prisma.sessionSocketDb.findFirst({
                 include: {
                     user: true
                 },
@@ -120,7 +120,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
 
                     if (!isUserInTopScore) {
 
-                        const userRankDb = await prisma.jA030_User.findFirst({
+                        const userRankDb = await prisma.userDB.findFirst({
                             where: {
                                 username: user.username
                             },
@@ -130,7 +130,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
                         });
 
                         if (userRankDb) {
-                            const userRank = await prisma.jA030_User.count({
+                            const userRank = await prisma.userDB.count({
                                 where: {
                                     score: {
                                         gte: userRankDb.score
@@ -164,7 +164,7 @@ export const broadcastScore = async (socket: Socket<DefaultEventsMap, DefaultEve
 export const popTopScore = async (req: any, res: any) => {
     try {
         const token = req.headers.authorization || '';
-        let topScore: UserWithRank[] = await prisma.jA030_User.findMany({
+        let topScore: UserWithRank[] = await prisma.userDB.findMany({
             take: 10,
             orderBy: {
                 score: 'desc'
@@ -190,7 +190,7 @@ export const popTopScore = async (req: any, res: any) => {
             try {
                 const user = jwt.verify(bearer, SECRET);
                 if (user !== null && typeof user === 'object') {
-                    const userInfo = await prisma.jA030_User.findFirst({
+                    const userInfo = await prisma.userDB.findFirst({
                         where: {
                             id: user.id
                         }
@@ -199,7 +199,7 @@ export const popTopScore = async (req: any, res: any) => {
                     if (userInfo) {
                         const isUserInTopScore = topScore.find(u => u.username === userInfo.username);
                         if (!isUserInTopScore) {
-                            const userRank = await prisma.jA030_User.count({
+                            const userRank = await prisma.userDB.count({
                                 where: {
                                     score: {
                                         gte: userInfo.score
