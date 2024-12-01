@@ -69,7 +69,7 @@ poppoo-app
 
 ![System Architecture](./images/02.png)
 
-diagram database
+Database Diagram
 - สร้าง model สำหรับการจัดการข้อมูลผู้ใช้ คะแนน และ session ประกอบด้วยตารางต่างๆ เช่น UserDB, TokenDb, SessionSocketDb
 <div align="center">
    <img src="./images/04-db.png" width="50%" height="50%">
