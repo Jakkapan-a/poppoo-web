@@ -2,6 +2,18 @@
 ## บทนำ
 poppoo คือ เป็นแอปพลิเคชันที่ถูกสร้างขึ้นเพื่อเป็นตัวอย่างการ ออกแบบ ระบบเว็บที่มีการ update ข้อมูลแบบ real-time มีระบบ login จัดอันดับ score แบบ real-time
 
+## Technologies Used
+
+- **Bun**: สำหรับการพัฒนา Backend
+- **React**: สำหรับการพัฒนา Frontend
+- **Socket.IO**: สำหรับการสื่อสารแบบเรียลไทม์
+- **PostgreSQL**: ฐานข้อมูลหลักของระบบ
+- **Prisma**: สำหรับจัดการ ORM และการทำงานกับฐานข้อมูล
+- **Google OAuth 2.0**: สำหรับการตรวจสอบสิทธิ์ผู้ใช้งาน
+- **JWT**: สำหรับการจัดการ Token ของผู้ใช้
+
+
+
 ### ตัวอย่าง 
 <img src="./images/01.png" width="50%" height="50%">
 
@@ -30,11 +42,6 @@ poppoo-app
 └── ...
 ```
 
-### Features
-- Authentication (JWT)
-- Google OAuth2.0
-- Real-time update
-- RESTful API
 
 <!-- ### คำอธิบายโครงสร้างโปรเจค
 - client จะเป็นส่วนของ frontend ที่ใช้ React ในการพัฒนา
@@ -93,8 +100,7 @@ poppoo-app
 
 ---
 
-## วิธีการทำงาน
-
+## วิธีการทำงานภาพรวม
 1. **ล็อกอิน**:
    - ผู้ใช้งานล็อกอินผ่าน Google OAuth 2.0 และรับ **JWT Token**
    - นำ Token ที่ได้ไปใช้ใน API ที่ต้องการการยืนยันตัวตน
@@ -112,7 +118,7 @@ poppoo-app
    - Backend ใช้ **Socket.IO** เพื่อกระจายคะแนนแบบเรียลไทม์ไปยังผู้เล่นทุกคน
 
 ---
-## กระบวนการอัพเดทคะแนนผ่าน Socket
+## กระบวนการอัพเดทคะแนนผ่าน Socket (Client -> Server)
 
 ### การส่งคะแนน (Client -> Server)
 1. **Event: 'update_score'**
@@ -161,16 +167,6 @@ poppoo-app
 4. หากเกิดข้อผิดพลาด Server จะส่ง event 'score_error' กลับไปยัง Client
 5. Client ทุกคนได้รับการอัพเดทและแสดงผลคะแนนใหม่แบบ real-time
 
-
-## Technologies Used
-
-- **Bun**: สำหรับการพัฒนา Backend
-- **React**: สำหรับการพัฒนา Frontend
-- **Socket.IO**: สำหรับการสื่อสารแบบเรียลไทม์
-- **PostgreSQL**: ฐานข้อมูลหลักของระบบ
-- **Prisma**: สำหรับจัดการ ORM และการทำงานกับฐานข้อมูล
-- **Google OAuth 2.0**: สำหรับการตรวจสอบสิทธิ์ผู้ใช้งาน
-- **JWT**: สำหรับการจัดการ Token ของผู้ใช้
 
 
 
