@@ -7,12 +7,10 @@ poppoo คือ เป็นแอปพลิเคชันที่ถูก
 - **Bun**: สำหรับการพัฒนา Backend
 - **React**: สำหรับการพัฒนา Frontend
 - **Socket.IO**: สำหรับการสื่อสารแบบเรียลไทม์
-- **PostgreSQL**: ฐานข้อมูลหลักของระบบ
 - **Prisma**: สำหรับจัดการ ORM และการทำงานกับฐานข้อมูล
+- **PostgreSQL**: ฐานข้อมูลหลักของระบบ
 - **Google OAuth 2.0**: สำหรับการตรวจสอบสิทธิ์ผู้ใช้งาน
 - **JWT**: สำหรับการจัดการ Token ของผู้ใช้
-
-
 
 ### ตัวอย่าง 
 <img src="./images/01.png" width="50%" height="50%">
@@ -58,8 +56,111 @@ poppoo-app
 
 ![System Architecture](./images/02.png)
 
+diagram database
+- สร้าง model สำหรับการจัดการข้อมูลผู้ใช้ คะแนน และ session ประกอบด้วยตารางต่างๆ เช่น UserDB, TokenDb, SessionSocketDb
+<div align="center">
+   <img src="./images/04-db.png" width="50%" height="50%">
+</div>
+
+
+## รายละเอียด API ที่ใช้ในระบบ
+
+| **#** | **Path**                           | **Methods**  | **Middlewares**                  |
+|-------|------------------------------------|--------------|-----------------------------------|
+| 0     | `/`                                | `GET`        | `anonymous`                      |
+| 1     | `/api`                             | `GET`        | `anonymous`                      |
+| 2     | `/api/auth/sign-in`                | `POST`       | `anonymous`                      |
+| 3     | `/api/auth/signup`                 | `POST`       | `anonymous`                      |
+| 4     | `/api/auth/check-username/:username` | `GET`       | `anonymous`                      |
+| 5     | `/api/auth/check-username`         | `POST`       | `anonymous`                      |
+| 6     | `/api/auth/update-username`        | `POST`       | `anonymous`                      |
+| 7     | `/api/auth/delete-account`         | `POST`       | `anonymous`                      |
+| 8     | `/api/auth/has-sign-in/:username`  | `GET`        | `anonymous`                      |
+| 9     | `/api/auth/sign-out`               | `POST`       | `anonymous`                      |
+| 10    | `/api/top-score`                   | `GET`        | `anonymous`                      |
+| 11    | `/api/pop/score`                   | `GET`        | `anonymous`                      |
+| 12    | `/test/:userId`                    | `GET`        | `anonymous`                      |
+| 13    | `/api/auth/google`                 | `GET`        | `authenticate`                   |
+| 14    | `/api/google/callback`             | `GET`        | `authenticate`, `anonymous`      |
+
 ---
 
+## คำอธิบาย API
+
+1. **`/`**  
+   - ใช้สำหรับตรวจสอบสถานะของระบบ  
+   - Method: `GET`  
+   - Middleware: `anonymous`
+
+2. **`/api`**  
+   - ใช้สำหรับตรวจสอบสถานะของ API  
+   - Method: `GET`  
+   - Middleware: `anonymous`
+
+3. **`/api/auth/sign-in`**  
+   - ใช้สำหรับเข้าสู่ระบบและสร้าง token  
+   - Method: `POST`  
+   - Middleware: `anonymous`
+
+4. **`/api/auth/signup`**  
+   - ใช้สำหรับลงทะเบียนผู้ใช้ใหม่และสร้าง token  
+   - Method: `POST`  
+   - Middleware: `anonymous`
+
+5. **`/api/auth/check-username/:username`**  
+   - ตรวจสอบว่า username มีอยู่ในระบบหรือไม่  
+   - Method: `GET`  
+   - Middleware: `anonymous`
+
+6. **`/api/auth/check-username`**  
+   - ตรวจสอบว่า username มีอยู่ในระบบ (ใช้ Body)  
+   - Method: `POST`  
+   - Middleware: `anonymous`
+
+7. **`/api/auth/update-username`**  
+   - ใช้สำหรับอัปเดต username  
+   - Method: `POST`  
+   - Middleware: `anonymous`
+
+8. **`/api/auth/delete-account`**  
+   - ใช้สำหรับลบบัญชีผู้ใช้  
+   - Method: `POST`  
+   - Middleware: `anonymous`
+
+9. **`/api/auth/has-sign-in/:username`**  
+   - ตรวจสอบว่า username มีการเข้าสู่ระบบอยู่หรือไม่  
+   - Method: `GET`  
+   - Middleware: `anonymous`
+
+10. **`/api/auth/sign-out`**  
+    - ใช้สำหรับออกจากระบบ  
+    - Method: `POST`  
+    - Middleware: `anonymous`
+
+11. **`/api/top-score`**  
+    - ใช้สำหรับเรียกดูคะแนนสูงสุด  
+    - Method: `GET`  
+    - Middleware: `anonymous`
+
+12. **`/api/pop/score`**  
+    - ใช้สำหรับดูคะแนนของผู้ใช้  
+    - Method: `GET`  
+    - Middleware: `anonymous`
+
+13. **`/test/:userId`**  
+    - ใช้สำหรับทดสอบการเชื่อมต่อระบบ  
+    - Method: `GET`  
+    - Middleware: `anonymous`
+
+14. **`/api/auth/google`**  
+    - ใช้สำหรับเข้าสู่ระบบด้วย Google OAuth 2.0  
+    - Method: `GET`  
+    - Middleware: `authenticate`
+
+15. **`/api/google/callback`**  
+    - ใช้สำหรับการตรวจสอบสิทธิ์หลังจาก Login สำเร็จ  
+    - Method: `GET`  
+    - Middleware: `authenticate`, `anonymous`
 
 
 ### ส่วนประกอบหลัก
@@ -84,90 +185,15 @@ poppoo-app
 
 ---
 
-### การทำงานของ Backend
-
-1. **Auth/Login**:
-   - ผู้ใช้ล็อกอินผ่าน **Google OAuth 2.0**
-   - ระบบจะตรวจสอบความถูกต้องและสร้าง **JWT Token** ให้ผู้ใช้สำหรับการเข้าถึงระบบ
-
-2. **Database**:
-   - ใช้ **Prisma** ในการเชื่อมต่อและจัดการฐานข้อมูล PostgreSQL
-   - บันทึกและเรียกข้อมูลผู้ใช้และคะแนนที่เกี่ยวข้อง
-
-3. **Real-Time Communication**:
-   - ใช้ **Socket.IO** สำหรับการกระจายคะแนน (Broadcast) แบบเรียลไทม์
-   - เมื่อมีการอัปเดตคะแนน ระบบจะส่งข้อมูลไปยังผู้เล่นคนอื่นในระบบทันที
-
----
-
-## วิธีการทำงานภาพรวม
-1. **ล็อกอิน**:
-   - ผู้ใช้งานล็อกอินผ่าน Google OAuth 2.0 และรับ **JWT Token**
-   - นำ Token ที่ได้ไปใช้ใน API ที่ต้องการการยืนยันตัวตน
-
-2. **การส่งคะแนน**:
-   - ผู้เล่นส่งคะแนน (**Score**) ไปยัง Backend
-   - Backend ตรวจสอบ Token และบันทึกคะแนนลงฐานข้อมูล
-
-3. **การกระจายคะแนน**:
-   - Backend ใช้ **Socket.IO** เพื่อกระจายคะแนนแบบเรียลไทม์ไปยังผู้เล่นทุกคน
-
----
-
-3. **การกระจายคะแนน**:
-   - Backend ใช้ **Socket.IO** เพื่อกระจายคะแนนแบบเรียลไทม์ไปยังผู้เล่นทุกคน
-
----
-## กระบวนการอัพเดทคะแนนผ่าน Socket (Client -> Server)
-
-### การส่งคะแนน (Client -> Server)
-1. **Event: 'update_score'**
-   ```typescript
-   socket.emit('update_score', {
-     score: number,
-     token: string,  // JWT token สำหรับการยืนยันตัวตน
-     gameId?: string // รหัสเกมที่กำลังเล่น (ถ้ามี)
-   });
-   ```
-
-### การรับคะแนน (Server -> Client)
-1. **Event: 'score_updated'**
-   ```typescript
-   socket.on('score_updated', (data) => {
-     // data มีรูปแบบ
-     {
-       userId: string,
-       username: string,
-       score: number,
-       gameId?: string,
-       timestamp: Date,
-       rank: number    // อันดับปัจจุบัน
-     }
-   });
-   ```
-
-### การจัดการ Error
-1. **Event: 'score_error'**
-   ```typescript
-   socket.on('score_error', (error) => {
-     // error มีรูปแบบ
-     {
-       code: string,    // รหัส error
-       message: string, // ข้อความ error
-       timestamp: Date
-     }
-   });
-   ```
----
-
 ### ขั้นตอนการทำงาน
-1. ผู้เล่นทำคะแนนได้ และส่ง event 'update_score'
-2. Server ตรวจสอบ token และบันทึกคะแนนในฐานข้อมูล
-3. Server คำนวณอันดับใหม่และ broadcast คะแนนไปยังผู้เล่นทุกคนผ่าน event 'score_updated'
-4. หากเกิดข้อผิดพลาด Server จะส่ง event 'score_error' กลับไปยัง Client
-5. Client ทุกคนได้รับการอัพเดทและแสดงผลคะแนนใหม่แบบ real-time
+การเพิ่มคะแนน:
+1. ผู้เล่นส่ง Event 'update_score' ผ่าน socket.io ไปยัง Backend
+2. Backend บันทึกคะแนนในฐานข้อมูล 
+3. Backend คำนวณอันดับใหม่และส่ง Event 'score_updated' ไปยังทุก Client ผ่าน socket.io
 
-
+## การจัดการผู้ใช้:
+1. ผู้ใช้สามารถเข้าสู่ระบบหรือสมัครใช้งานผ่าน Google OAuth 2.0
+2. Token จะถูกสร้างขึ้นและส่งกลับไปยังผู้ใช้
 
 
 ### วิธีการใช้งาน
