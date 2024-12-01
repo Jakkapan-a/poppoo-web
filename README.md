@@ -2,6 +2,19 @@
 ## บทนำ
 poppoo คือ เป็นแอปพลิเคชันที่ถูกสร้างขึ้นเพื่อเป็นตัวอย่างการ ออกแบบ ระบบเว็บที่มีการ update ข้อมูลแบบ real-time มีระบบ login จัดอันดับ score แบบ real-time
 
+### วิธีการใช้งานร่วมกับ docker-compose 
+```bash 
+git clone https://github.com/Jakkapan-a/poppoo-web.git
+cd poppoo-web
+docker-compose up -d --build
+# หรือ
+docker-compose up -d 
+```
+
+### เข้าใช้งาน
+- client: http://ip_address
+
+
 ## Technologies Used
 
 - **Bun**: สำหรับการพัฒนา Backend
@@ -196,17 +209,7 @@ diagram database
 2. Token จะถูกสร้างขึ้นและส่งกลับไปยังผู้ใช้
 
 
-### วิธีการใช้งาน
-```bash 
-git clone https://github.com/Jakkapan-a/poppoo-web.git
-cd poppoo-web
-docker-compose up -d --build
-# หรือ
-docker-compose up -d 
-```
 
-### เข้าใช้งาน
-- client: http://ip_address
 
 ### โครงการนี้เป็นส่วนหนึ่งของหลักสูตร วิศวกรรมคอมพิวเตอร์
 - วิชา CT648 วิศวกรรมเว็บและคลาวด์
