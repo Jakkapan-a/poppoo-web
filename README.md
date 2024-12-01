@@ -53,6 +53,8 @@ poppoo-app
 
 ---
 
+
+
 ### ส่วนประกอบหลัก
 
 1. **Frontend (Client Browser)**
@@ -106,15 +108,70 @@ poppoo-app
 
 ---
 
+3. **การกระจายคะแนน**:
+   - Backend ใช้ **Socket.IO** เพื่อกระจายคะแนนแบบเรียลไทม์ไปยังผู้เล่นทุกคน
+
+---
+## กระบวนการอัพเดทคะแนนผ่าน Socket
+
+### การส่งคะแนน (Client -> Server)
+1. **Event: 'update_score'**
+   ```typescript
+   socket.emit('update_score', {
+     score: number,
+     token: string,  // JWT token สำหรับการยืนยันตัวตน
+     gameId?: string // รหัสเกมที่กำลังเล่น (ถ้ามี)
+   });
+   ```
+
+### การรับคะแนน (Server -> Client)
+1. **Event: 'score_updated'**
+   ```typescript
+   socket.on('score_updated', (data) => {
+     // data มีรูปแบบ
+     {
+       userId: string,
+       username: string,
+       score: number,
+       gameId?: string,
+       timestamp: Date,
+       rank: number    // อันดับปัจจุบัน
+     }
+   });
+   ```
+
+### การจัดการ Error
+1. **Event: 'score_error'**
+   ```typescript
+   socket.on('score_error', (error) => {
+     // error มีรูปแบบ
+     {
+       code: string,    // รหัส error
+       message: string, // ข้อความ error
+       timestamp: Date
+     }
+   });
+   ```
+---
+
+### ขั้นตอนการทำงาน
+1. ผู้เล่นทำคะแนนได้ และส่ง event 'update_score'
+2. Server ตรวจสอบ token และบันทึกคะแนนในฐานข้อมูล
+3. Server คำนวณอันดับใหม่และ broadcast คะแนนไปยังผู้เล่นทุกคนผ่าน event 'score_updated'
+4. หากเกิดข้อผิดพลาด Server จะส่ง event 'score_error' กลับไปยัง Client
+5. Client ทุกคนได้รับการอัพเดทและแสดงผลคะแนนใหม่แบบ real-time
+
+
 ## Technologies Used
 
 - **Bun**: สำหรับการพัฒนา Backend
-- **Angular**: สำหรับการพัฒนา Frontend
+- **React**: สำหรับการพัฒนา Frontend
 - **Socket.IO**: สำหรับการสื่อสารแบบเรียลไทม์
 - **PostgreSQL**: ฐานข้อมูลหลักของระบบ
 - **Prisma**: สำหรับจัดการ ORM และการทำงานกับฐานข้อมูล
 - **Google OAuth 2.0**: สำหรับการตรวจสอบสิทธิ์ผู้ใช้งาน
 - **JWT**: สำหรับการจัดการ Token ของผู้ใช้
+
 
 
 ### วิธีการใช้งาน
